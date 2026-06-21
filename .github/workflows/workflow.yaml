@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/affidiff/
+      url: https://pypi.org/p/echoloop/
     permissions:
       id-token: write
       contents: read
