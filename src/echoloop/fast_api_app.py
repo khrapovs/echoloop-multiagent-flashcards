@@ -9,7 +9,9 @@ from echoloop.app_utils.telemetry import setup_telemetry
 from echoloop.app_utils.typing import Feedback
 
 setup_telemetry()
-_, project_id = google.auth.default()
+project_id = google.auth.default()[1]
+if project_id:
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
 logging_client = google_cloud_logging.Client()
 logger = logging_client.logger(__name__)
 allow_origins = os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_ORIGINS") else None
