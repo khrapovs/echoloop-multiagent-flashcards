@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks  # Enables fast path
+    rev: v6.0.0  # This is ignored for fast path detection
+    hooks:
+      - id: trailing-whitespace
+
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.15.18
+    hooks:
+      - id: ruff
+        args: [ --config, pyproject.toml, --fix, --exit-non-zero-on-fix ]
+        types_or: [ python ]
+      - id: ruff-format
+        args: [ --config, pyproject.toml ]
+        types_or: [ python ]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.1.0
+    hooks:
+      - id: mypy
+        args: [--config, pyproject.toml]

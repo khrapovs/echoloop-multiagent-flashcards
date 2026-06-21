@@ -3,16 +3,19 @@ name = "echoloop"
 description = "A multi-agent, multi-modal language learning application that utilizes collaborative LLM agents to dynamically generate contextual, visual, and adaptive flashcards powered by spaced repetition."
 authors = [
   { name = "Stanislav Khrapov", email = "khrapovs@gmail.com" }
-] 
+]
 readme = "README.md"
 requires-python = ">=3.14"
 dynamic = ["version"]
 
-dependencies = []
+dependencies = [
+]
 
 [dependency-groups]
 dev = [
+    "prek>=0.4.5",
     "pytest>=9.1.1",
+    "ty>=0.0.51",
 ]
 
 [build-system]
@@ -34,3 +37,6 @@ tag_format = "v$version"
 [tool.ruff]
 line-length = 120
 src = ["src", "tests"]
+
+[tool.ty.rules]
+no-matching-overload = "ignore"
