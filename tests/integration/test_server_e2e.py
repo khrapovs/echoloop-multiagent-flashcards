@@ -1,5 +1,5 @@
 import json
-import logging
+from loguru import logger
 import os
 import subprocess
 import sys
@@ -12,9 +12,6 @@ import pytest
 import requests
 from requests.exceptions import RequestException
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 BASE_URL = "http://127.0.0.1:8000"
 STREAM_URL = BASE_URL + "/run_sse"

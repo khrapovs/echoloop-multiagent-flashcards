@@ -500,6 +500,7 @@ dependencies = [
     { name = "google-adk", extra = ["extensions"] },
     { name = "google-agents-cli" },
     { name = "google-cloud-logging" },
+    { name = "loguru" },
     { name = "opentelemetry-api" },
     { name = "opentelemetry-exporter-gcp-logging" },
     { name = "opentelemetry-exporter-otlp" },
@@ -518,6 +519,7 @@ requires-dist = [
     { name = "google-adk", extras = ["extensions"], specifier = ">=2.3.0" },
     { name = "google-agents-cli", specifier = ">=0.5.0" },
     { name = "google-cloud-logging", specifier = ">=3.16.0" },
+    { name = "loguru", specifier = ">=0.7.3" },
     { name = "opentelemetry-api", specifier = ">=1.42.1" },
     { name = "opentelemetry-exporter-gcp-logging", specifier = ">=1.12.0a0" },
     { name = "opentelemetry-exporter-otlp", specifier = ">=1.42.1" },
@@ -1636,6 +1638,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f9/95/caf78f2ea9a821f6ff37c02f20bd9e0d920c15af95e1d40b0ba294bce5be/llama_index_workflows-2.22.0.tar.gz", hash = "sha256:c8c97105a7fc9b472716e5df8cfe231003bb24e25adb51331652c26c59774f1e", size = 133612, upload-time = "2026-06-17T21:47:37.998Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2e/61/03754e2d9e244e2c5afb82025a29f8b27c1b1c2711343d28de01899be5ed/llama_index_workflows-2.22.0-py3-none-any.whl", hash = "sha256:0b66450e7abd79b3eba743fb25c4e1ac2f9eaeeb01a102fda21ce0314dc5d6cd", size = 161479, upload-time = "2026-06-17T21:47:38.909Z" },
+]
+
+[[package]]
+name = "loguru"
+version = "0.7.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+    { name = "win32-setctime", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/3a/05/a1dae3dffd1116099471c643b8924f5aa6524411dc6c63fdae648c4f1aca/loguru-0.7.3.tar.gz", hash = "sha256:19480589e77d47b8d85b2c827ad95d49bf31b0dcde16593892eb51dd18706eb6", size = 63559, upload-time = "2024-12-06T11:20:56.608Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl", hash = "sha256:31a33c10c8e1e10422bfd431aeb5d351c7cf7fa671e3c4df004162264b28220c", size = 61595, upload-time = "2024-12-06T11:20:54.538Z" },
 ]
 
 [[package]]
@@ -3168,6 +3183,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/21/e6/26d09fab466b7ca9c7737474c52be4f76a40301b08362eb2dbc19dcc16c1/websockets-15.0.1.tar.gz", hash = "sha256:82544de02076bafba038ce055ee6412d68da13ab47f0c60cab827346de828dee", size = 177016, upload-time = "2025-03-05T20:03:41.606Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/a8/5b41e0da817d64113292ab1f8247140aac61cbf6cfd085d6a0fa77f4984f/websockets-15.0.1-py3-none-any.whl", hash = "sha256:f7a866fbc1e97b5c617ee4116daaa09b722101d4a3c170c787450ba409f9736f", size = 169743, upload-time = "2025-03-05T20:03:39.41Z" },
+]
+
+[[package]]
+name = "win32-setctime"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/8f/705086c9d734d3b663af0e9bb3d4de6578d08f46b1b101c2442fd9aecaa2/win32_setctime-1.2.0.tar.gz", hash = "sha256:ae1fdf948f5640aae05c511ade119313fb6a30d7eabe25fef9764dca5873c4c0", size = 4867, upload-time = "2024-12-07T15:28:28.314Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/07/c6fe3ad3e685340704d314d765b7912993bcb8dc198f0e7a89382d37974b/win32_setctime-1.2.0-py3-none-any.whl", hash = "sha256:95d644c4e708aba81dc3704a116d8cbc974d70b3bdb8be1d150e36be6e9d1390", size = 4083, upload-time = "2024-12-07T15:28:26.465Z" },
 ]
 
 [[package]]
