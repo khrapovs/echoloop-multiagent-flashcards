@@ -9,9 +9,14 @@ from google.genai import types
 import os
 import google.auth
 
-project_id = google.auth.default()[1]
-if project_id:
-    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+try:
+    project_id = google.auth.default()[1]
+    if project_id:
+        os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
+except Exception:
+    # Handle environment where ADC is not set up (e.g. offline testing environments)
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "mock-project-id")
+
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
