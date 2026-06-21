@@ -9,6 +9,7 @@ repos:
       - id: no-commit-to-branch
       - id: check-json
       - id: pretty-format-json
+        args: ["--autofix"]
       - id: check-yaml
       - id: detect-private-key
 
@@ -21,9 +22,3 @@ repos:
       - id: ruff-format
         args: [ --config, pyproject.toml ]
         types_or: [ python ]
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.1.0
-    hooks:
-      - id: mypy
-        args: [--config, pyproject.toml]

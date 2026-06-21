@@ -1,0 +1,14 @@
+name: "echoloop"
+acli_version: "0.5.0"
+agent_directory: "echoloop"
+region: "us-east1"
+base_template: "local_echoloop-multiagent-flashcards"
+generated_at: "2026-06-21T11:08:18.807527+00:00"
+language: "python"
+create_params:
+  deployment_target: "none"
+  session_type: "in_memory"
+  cicd_runner: "skip"
+  include_data_ingestion: false
+  datastore: "none"
+  agent_guidance_filename: "AGENTS.md"
