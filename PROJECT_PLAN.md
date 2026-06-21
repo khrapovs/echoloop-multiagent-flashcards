@@ -46,9 +46,9 @@ graph TD
   - `def record_review(card_id: str, quality_score: int) -> None`
 
 ### 3. User Interface / Controller Module (`UI`)
-
-- **Seam**: A clean command-line interface (CLI) or a lightweight web server (e.g., FastAPI) wrapper for interactive use.
-- **Depth**: Focuses on rendering outputs, managing interactive loops, and handling user inputs, completely separated from generation logic and database queries.
+- **Seam**: A clean user interface.
+- **Implementation**: Built with **Streamlit** (Python-based frontend) for rapid prototyping and interactive card study.
+- **Depth**: Focuses on rendering outputs (card display, flip mechanics, status updates), managing the interactive study loop, and handling user inputs, completely separated from generation logic and database queries.
 
 ## Verification Plan
 
