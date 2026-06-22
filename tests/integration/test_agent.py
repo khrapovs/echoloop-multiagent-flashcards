@@ -1,15 +1,13 @@
-from echoloop.agent import FlashcardContext
+from echoloop.agent import FlashcardContext, root_agent
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
-from echoloop.agent import root_agent
-
 
 def test_agent_run() -> None:
-    """
-    Integration test for the context agent.
+    """Integration test for the context agent.
+
     Verifies that the agent generates a structured flashcard payload.
     """
     session_service = InMemorySessionService()
