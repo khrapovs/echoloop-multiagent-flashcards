@@ -1,3 +1,9 @@
+## v0.3.0 (2026-06-22)
+
+### Feat
+
+- Implement flash card context agent (#9)
+
 ## v0.2.0 (2026-06-21)
 
 ### Feat
