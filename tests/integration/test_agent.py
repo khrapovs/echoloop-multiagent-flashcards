@@ -34,6 +34,7 @@ def test_agent_run() -> None:
 
     # Locate the state or generated payload
     updated_session = session_service.get_session_sync(app_name="test", user_id="test_user", session_id=session.id)
+    assert updated_session is not None
     assert "flashcard_context" in updated_session.state
     card = FlashcardContext(**updated_session.state["flashcard_context"])
     assert card.word.lower() == "katze"
