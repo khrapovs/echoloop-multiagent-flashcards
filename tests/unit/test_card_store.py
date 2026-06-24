@@ -7,6 +7,7 @@ on disk and each test is fully isolated via the ``store`` fixture.
 from __future__ import annotations
 
 import datetime
+from typing import Literal
 
 import pytest
 from echoloop.storage.adapter import CardStore
@@ -19,14 +20,10 @@ def store() -> CardStore:
     return CardStore(db_path=":memory:")
 
 
-def _make_card(**kwargs) -> Card:
-    defaults = dict(
-        word="Hund",
-        translation="dog",
-        detected_level="A1",
-    )
-    defaults.update(kwargs)
-    return Card(**defaults)
+def _make_card(
+    word: str = "Hund", translation: str = "dog", detected_level: Literal["A1", "A2", "B1", "B2", "C1", "C2"] = "A1"
+) -> Card:
+    return Card(word=word, translation=translation, detected_level=detected_level)
 
 
 # ---------------------------------------------------------------------------
