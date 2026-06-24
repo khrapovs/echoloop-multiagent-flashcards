@@ -15,7 +15,11 @@ dependencies = [
   "opentelemetry-exporter-gcp-logging>=1.12.0a0",
   "opentelemetry-exporter-otlp>=1.42.1",
   "opentelemetry-sdk>=1.42.1",
+  "streamlit>=1.58.0",
 ]
+
+[project.scripts]
+echoloop = "echoloop.cli:run_ui"
 
 [dependency-groups]
 dev = [
