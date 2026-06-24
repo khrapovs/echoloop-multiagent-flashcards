@@ -26,7 +26,7 @@ def runner() -> Runner:
 
 def _run_agent(runner: Runner, word: str) -> tuple[InMemorySessionService, str]:
     """Create a session, send ``word`` to the agent, and return (session_service, session_id)."""
-    session_service: InMemorySessionService = runner.session_service  # type: ignore[attr-defined]
+    session_service: InMemorySessionService = runner.session_service
     session = session_service.create_session_sync(user_id="test_user", app_name="test_synonyms")
     message = types.Content(
         role="user",
