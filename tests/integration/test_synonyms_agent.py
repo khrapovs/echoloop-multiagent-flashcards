@@ -26,8 +26,9 @@ def runner() -> Runner:
 
 def _run_agent(runner: Runner, word: str) -> tuple[InMemorySessionService, str]:
     """Create a session, send ``word`` to the agent, and return (session_service, session_id)."""
-    session_service: InMemorySessionService = runner.session_service
+    session_service: InMemorySessionService = runner.session_service  # ty: ignore
     session = session_service.create_session_sync(user_id="test_user", app_name="test_synonyms")
+    assert session is not None
     message = types.Content(
         role="user",
         parts=[types.Part.from_text(text=f"Give me synonyms for the German word: '{word}'")],
@@ -56,6 +57,7 @@ class TestSynonymsAgentOutput:
         """The raw session state must deserialise into SynonymsOutput without error."""
         session_service, session_id = _run_agent(runner, "Hund")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         assert isinstance(result, SynonymsOutput)
 
@@ -63,6 +65,7 @@ class TestSynonymsAgentOutput:
         """The agent must echo the original input word."""
         session_service, session_id = _run_agent(runner, "Hund")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         assert result.original_word.lower() == "hund"
 
@@ -70,6 +73,7 @@ class TestSynonymsAgentOutput:
         """The agent must suggest at least one synonym for a common German word."""
         session_service, session_id = _run_agent(runner, "Hund")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         assert len(result.synonyms) >= 1
 
@@ -77,6 +81,7 @@ class TestSynonymsAgentOutput:
         """The agent must not exceed the 5-synonym limit."""
         session_service, session_id = _run_agent(runner, "schön")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         assert len(result.synonyms) <= 5
 
@@ -84,6 +89,7 @@ class TestSynonymsAgentOutput:
         """Every SynonymEntry must carry both a German synonym and an English translation."""
         session_service, session_id = _run_agent(runner, "Hund")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         for entry in result.synonyms:
             assert entry.synonym_word.strip(), "synonym_word must not be empty"
@@ -93,6 +99,7 @@ class TestSynonymsAgentOutput:
         """The original word itself must not appear in the synonyms list."""
         session_service, session_id = _run_agent(runner, "Hund")
         session = session_service.get_session_sync(app_name="test_synonyms", user_id="test_user", session_id=session_id)
+        assert session is not None
         result = SynonymsOutput(**session.state["synonyms_output"])
         synonym_words_lower = [e.synonym_word.lower() for e in result.synonyms]
         assert "hund" not in synonym_words_lower, "Original word must not be repeated as a synonym"
