@@ -28,7 +28,7 @@ Run the UI:
 ```bash
 uv run echoloop
 ```
-This opens the EchoLoop Streamlit interface in your browser at `http://localhost:8501`.
+This opens the EchoLoop Streamlit interface in your browser at [http://localhost:8501](http://localhost:8501).
 
 ## Development
 
