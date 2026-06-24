@@ -1,3 +1,9 @@
+## v0.7.0 (2026-06-24)
+
+### Feat
+
+- Create a flash card in UI using context agent (#13)
+
 ## v0.6.0 (2026-06-24)
 
 ### Feat

@@ -1,6 +1,6 @@
 [project]
 name = "echoloop"
-version = "0.6.0"
+version = "0.7.0"
 description = "A multi-agent, multi-modal language learning application that utilizes collaborative LLM agents to dynamically generate contextual, visual, and adaptive flashcards powered by spaced repetition."
 readme = "README.md"
 requires-python = ">=3.14"
