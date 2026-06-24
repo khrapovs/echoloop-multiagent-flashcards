@@ -4,8 +4,6 @@ Each model maps 1-to-1 with a database table. All IDs are auto-assigned
 by the database; ``None`` means "not yet persisted".
 """
 
-from __future__ import annotations
-
 import datetime
 from typing import Literal
 

@@ -7,10 +7,8 @@ Run with:
     uv run pytest tests/integration/test_synonyms_agent.py -v
 """
 
-from __future__ import annotations
-
 import pytest
-from echoloop.synonyms_agent import SynonymsOutput, synonyms_agent
+from echoloop.agents.synonyms_agent import SynonymsOutput, synonyms_agent
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService

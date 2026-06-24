@@ -4,8 +4,6 @@ Entry point:
     uv run echoloop
 """
 
-from __future__ import annotations
-
 import streamlit as st
 
 # ---------------------------------------------------------------------------
