@@ -506,7 +506,7 @@ dependencies = [
     { name = "opentelemetry-exporter-otlp" },
     { name = "opentelemetry-sdk" },
 ]
-version = "0.4.0"
+version = "0.5.0"
 
 [package.dev-dependencies]
 dev = [

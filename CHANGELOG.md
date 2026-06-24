@@ -1,3 +1,9 @@
+## v0.5.0 (2026-06-24)
+
+### Feat
+
+- Create synonym agent. Run some integration tests in GH actions. (#11)
+
 ## v0.4.0 (2026-06-24)
 
 ### Feat
