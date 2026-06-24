@@ -18,8 +18,8 @@ from pydantic import BaseModel, Field
 project_id = google.auth.default()[1]
 if project_id:
     os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
-os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
+os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 
 
 class SynonymEntry(BaseModel):
