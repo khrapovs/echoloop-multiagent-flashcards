@@ -33,8 +33,6 @@ jobs:
   integration-test:
     name: Run integration tests
     runs-on: ubuntu-latest
-    # Skip on forks or PRs where the secret is not available.
-    if: vars.GOOGLE_API_KEY != '' || secrets.GOOGLE_API_KEY != ''
     env:
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       # Tell configure_genai() to use the Developer API, not Vertex AI.
