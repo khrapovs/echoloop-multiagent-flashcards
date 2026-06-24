@@ -1,6 +1,7 @@
 import os
 
 import google.auth
+from anyio import Path
 from fastapi import FastAPI
 from google.adk.cli.fast_api import get_fast_api_app
 from google.cloud import logging as google_cloud_logging
@@ -19,7 +20,7 @@ allow_origins = os.getenv("ALLOW_ORIGINS", "").split(",") if os.getenv("ALLOW_OR
 # Artifact bucket for ADK (created by Terraform, passed via env var)
 logs_bucket_name = os.environ.get("LOGS_BUCKET_NAME")
 
-AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AGENT_DIR = Path(__file__).parents[1]
 # In-memory session configuration - no persistent storage
 session_service_uri = None
 
@@ -46,6 +47,7 @@ def collect_feedback(feedback: Feedback) -> dict[str, str]:
 
     Returns:
         Success message
+
     """
     logger.log_struct(feedback.model_dump(), severity="INFO")
     return {"status": "success"}

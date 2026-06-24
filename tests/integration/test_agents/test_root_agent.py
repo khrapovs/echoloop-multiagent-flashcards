@@ -9,7 +9,7 @@ Run with:
 
 from __future__ import annotations
 
-from echoloop.agent import FlashcardContext
+from echoloop.agents.root_agent import FlashcardContext
 from echoloop.runner import run_context_agent
 
 

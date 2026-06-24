@@ -5,8 +5,6 @@ structured list of synonyms together with the original word.  It does not
 depend on any other agent or prior conversation state.
 """
 
-from __future__ import annotations
-
 from google.adk.agents import Agent
 from google.adk.models import Gemini
 from google.genai import types
