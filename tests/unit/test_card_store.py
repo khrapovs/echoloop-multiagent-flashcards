@@ -4,8 +4,6 @@ All tests use an in-memory SQLite database so there are no side-effects
 on disk and each test is fully isolated via the ``store`` fixture.
 """
 
-from __future__ import annotations
-
 import datetime
 from typing import Literal
 

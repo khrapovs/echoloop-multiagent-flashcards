@@ -13,8 +13,6 @@ Non-responsibilities
 - No business rules about when a card is "due".
 """
 
-from __future__ import annotations
-
 import sqlite3
 from contextlib import contextmanager
 from typing import Generator

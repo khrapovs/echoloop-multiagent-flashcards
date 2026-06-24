@@ -7,8 +7,6 @@ Run with:
     uv run pytest tests/integration/test_agent.py -v
 """
 
-from __future__ import annotations
-
 from echoloop.agents.root_agent import FlashcardContext
 from echoloop.runner import run_context_agent
 

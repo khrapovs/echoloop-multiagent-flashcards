@@ -1,7 +1,5 @@
 """Command-line entry points for EchoLoop."""
 
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 

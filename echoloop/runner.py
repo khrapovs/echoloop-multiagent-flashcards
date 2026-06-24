@@ -4,8 +4,6 @@ These thin wrappers isolate ADK session/runner boilerplate so that
 both the UI and tests can call agents with a single function call.
 """
 
-from __future__ import annotations
-
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
