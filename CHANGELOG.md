@@ -1,3 +1,9 @@
+## v0.4.0 (2026-06-24)
+
+### Feat
+
+- Implement storage for created cards (#10)
+
 ## v0.3.0 (2026-06-22)
 
 ### Feat
