@@ -60,3 +60,8 @@ no-matching-overload = "ignore"
 [tool.uv.build-backend]
 module-root = "."
 module-name = "echoloop"
+
+[tool.pytest.ini_options]
+markers = [
+  "e2e: end-to-end tests that require a running server and full Vertex AI credentials (deselect with '-m not e2e')",
+]

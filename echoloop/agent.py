@@ -1,18 +1,14 @@
+from typing import Literal
+
 from google.adk.agents import Agent
 from google.adk.apps import App
 from google.adk.models import Gemini
 from google.genai import types
-
-import os
-import google.auth
 from pydantic import BaseModel, Field
-from typing import Literal
 
-project_id = google.auth.default()[1]
-if project_id:
-    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+from echoloop.config import configure_genai
+
+configure_genai()
 
 
 class FlashcardContext(BaseModel):
@@ -22,7 +18,9 @@ class FlashcardContext(BaseModel):
         description="The estimated CEFR difficulty level of the word."
     )
     example_sentence_german: str = Field(
-        description="A natural, illustrative German sentence using the word, appropriate for the user's current CEFR level."
+        description=(
+            "A natural, illustrative German sentence using the word, appropriate for the user's current CEFR level."
+        )
     )
     example_sentence_english: str = Field(description="The English translation of the German example sentence.")
 
