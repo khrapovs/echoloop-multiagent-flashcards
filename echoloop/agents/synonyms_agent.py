@@ -10,10 +10,6 @@ from google.adk.models import Gemini
 from google.genai import types
 from pydantic import BaseModel, Field
 
-from echoloop.config import configure_genai
-
-configure_genai()
-
 
 class SynonymEntry(BaseModel):
     """A single synonym with its English translation."""

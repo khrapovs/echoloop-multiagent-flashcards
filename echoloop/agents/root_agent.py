@@ -5,10 +5,6 @@ from google.adk.models import Gemini
 from google.genai import types
 from pydantic import BaseModel, Field
 
-from echoloop.config import configure_genai
-
-configure_genai()
-
 
 class FlashcardContext(BaseModel):
     word: str = Field(description="The original German word.")

@@ -11,7 +11,13 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
-from echoloop.agents.root_agent import FlashcardContext, root_agent
+from echoloop.config import configure_genai
+
+# Configure GenAI credentials once at the application boundary.
+# Agent modules are pure definitions and do not call configure_genai() themselves.
+configure_genai()
+
+from echoloop.agents.root_agent import FlashcardContext, root_agent  # noqa: E402
 
 
 def run_context_agent(word: str) -> FlashcardContext:
