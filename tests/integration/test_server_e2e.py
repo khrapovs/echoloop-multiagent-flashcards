@@ -1,5 +1,4 @@
 import json
-from loguru import logger
 import os
 import subprocess
 import sys
@@ -10,8 +9,8 @@ from typing import Any
 
 import pytest
 import requests
+from loguru import logger
 from requests.exceptions import RequestException
-
 
 BASE_URL = "http://127.0.0.1:8000"
 STREAM_URL = BASE_URL + "/run_sse"
@@ -87,6 +86,7 @@ def server_fixture(request: Any) -> Iterator[subprocess.Popen[str]]:
 def test_chat_stream(server_fixture: subprocess.Popen[str]) -> None:
     """Test the chat stream functionality."""
     logger.info("Starting chat stream test")
+    logger.info(f"Server pid = {server_fixture.pid}")
     # Create session first
     user_id = "test_user_123"
     session_data = {"state": {"preferred_language": "English", "visit_count": 1}}
@@ -138,6 +138,7 @@ def test_chat_stream(server_fixture: subprocess.Popen[str]) -> None:
 
 def test_chat_stream_error_handling(server_fixture: subprocess.Popen[str]) -> None:
     """Test the chat stream error handling."""
+    logger.info(f"Server pid = {server_fixture.pid}")
     logger.info("Starting chat stream error handling test")
     data = {"input": {"messages": [{"type": "invalid_type", "content": "Cause an error"}]}}
     response = requests.post(STREAM_URL, headers=HEADERS, json=data, stream=True, timeout=10)
@@ -147,10 +148,11 @@ def test_chat_stream_error_handling(server_fixture: subprocess.Popen[str]) -> No
 
 
 def test_collect_feedback(server_fixture: subprocess.Popen[str]) -> None:
-    """
-    Test the feedback collection endpoint (/feedback) to ensure it properly
+    """Test the feedback collection endpoint (/feedback) to ensure it properly.
+
     logs the received feedback.
     """
+    logger.info(f"Server pid = {server_fixture.pid}")
     # Create sample feedback data
     feedback_data = {
         "score": 4,
