@@ -7,19 +7,14 @@ depend on any other agent or prior conversation state.
 
 from __future__ import annotations
 
-import os
-
-import google.auth
 from google.adk.agents import Agent
 from google.adk.models import Gemini
 from google.genai import types
 from pydantic import BaseModel, Field
 
-project_id = google.auth.default()[1]
-if project_id:
-    os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global"
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+from echoloop.config import configure_genai
+
+configure_genai()
 
 
 class SynonymEntry(BaseModel):
