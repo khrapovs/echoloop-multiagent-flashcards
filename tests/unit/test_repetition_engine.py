@@ -4,8 +4,6 @@ All tests are pure unit tests — no network calls, no file I/O.
 The :memory: CardStore fixture provides isolation between tests.
 """
 
-from __future__ import annotations
-
 import datetime
 
 import pytest
@@ -123,7 +121,7 @@ class TestSuccessfulRecall:
         assert result.interval_days == 6
 
     def test_subsequent_interval_grows_with_ef(self, engine: RepetitionEngine) -> None:
-        """Third+ review → interval = round(prev_interval × EF)."""
+        """Third+ review → interval = round(prev_interval x EF)."""
         card = _card(repetitions=2, interval_days=6, easiness_factor=2.5)
         result = engine.calculate_next_review(card, review_score=4)
         assert result.interval_days == round(6 * result.easiness_factor)

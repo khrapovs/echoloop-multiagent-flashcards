@@ -6,33 +6,26 @@ the user's CEFR level from the distribution of cards in the database.
 Responsibilities
 ----------------
 - Calculate the next review date and updated SM-2 parameters for a card
-  given a review score (0–5).
-- Infer the user's current CEFR level by analysing the ``detected_level``
+  given a review score (0-5).
+- Infer the user's current CEFR level by analysing the "detected_level"
   distribution across all stored cards.
 
 Non-responsibilities
 --------------------
 - No database writes — the engine is a pure computation layer. Callers
-  are responsible for persisting the returned ``CardMetrics`` via
-  ``CardStore``.
+  are responsible for persisting the returned "CardMetrics" via
+  "CardStore".
 """
-
-from __future__ import annotations
 
 import datetime
 from collections import Counter
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from echoloop.constants import _MIN_EF, CEFR_LEVELS
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card
-
-# The six CEFR levels ordered from easiest to hardest.
-CEFR_LEVELS: list[str] = ["A1", "A2", "B1", "B2", "C1", "C2"]
-
-# SM-2 easiness-factor lower bound.
-_MIN_EF: float = 1.3
+from echoloop.types import CEFR_LEVELS_TYPE
 
 
 class CardMetrics(BaseModel):
@@ -66,16 +59,12 @@ class RepetitionEngine:
     # Public interface
     # ------------------------------------------------------------------
 
-    def calculate_next_review(
-        self,
-        card: Card,
-        review_score: int,
-    ) -> CardMetrics:
+    def calculate_next_review(self, card: Card, review_score: int) -> CardMetrics:
         """Apply the SM-2 algorithm and return updated scheduling metrics.
 
         Args:
             card: The card that was just reviewed.
-            review_score: Quality of recall on a 0–5 scale (0 = complete
+            review_score: Quality of recall on a 0-5 scale (0 = complete
                 blackout, 5 = perfect response).
 
         Returns:
@@ -116,7 +105,7 @@ class RepetitionEngine:
             next_review_date=new_next_review,
         )
 
-    def get_inferred_user_level(self) -> Literal["A1", "A2", "B1", "B2", "C1", "C2"]:
+    def get_inferred_user_level(self) -> CEFR_LEVELS_TYPE:
         """Infer the user's current CEFR level from their card database.
 
         Uses the mode (most frequent ``detected_level``) across all stored
@@ -148,7 +137,7 @@ class RepetitionEngine:
     def _updated_easiness_factor(ef: float, score: int) -> float:
         """Return the new easiness factor after a review.
 
-        SM-2 formula:  EF' = EF + 0.1 − (5 − score) × (0.08 + (5 − score) × 0.02)
+        SM-2 formula:  EF' = EF + 0.1 - (5 - score) x (0.08 + (5 - score) x 0.02)
         Clamped to a minimum of 1.3.
         """
         delta = 0.1 - (5 - score) * (0.08 + (5 - score) * 0.02)

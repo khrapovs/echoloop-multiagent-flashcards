@@ -8,6 +8,7 @@ Run with:
 """
 
 from echoloop.agents.root_agent import FlashcardContext
+from echoloop.constants import CEFR_LEVELS
 from echoloop.runner import run_context_agent
 
 
@@ -26,7 +27,7 @@ def test_word_is_echoed_back() -> None:
 def test_detected_level_is_valid_cefr() -> None:
     """The detected CEFR level is one of the six standard values."""
     card = run_context_agent("Katze")
-    assert card.detected_level in {"A1", "A2", "B1", "B2", "C1", "C2"}
+    assert card.detected_level in CEFR_LEVELS
 
 
 def test_example_sentences_are_present() -> None:

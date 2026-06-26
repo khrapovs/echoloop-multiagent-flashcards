@@ -5,9 +5,10 @@ by the database; ``None`` means "not yet persisted".
 """
 
 import datetime
-from typing import Literal
 
 from pydantic import BaseModel, Field
+
+from echoloop.types import CEFR_LEVELS_TYPE
 
 
 class Card(BaseModel):
@@ -16,7 +17,7 @@ class Card(BaseModel):
     id: int | None = None
     word: str
     translation: str
-    detected_level: Literal["A1", "A2", "B1", "B2", "C1", "C2"]
+    detected_level: CEFR_LEVELS_TYPE
     # SM-2 scheduling fields
     easiness_factor: float = Field(default=2.5, ge=1.3)
     interval_days: int = Field(default=1, ge=1)
