@@ -5,11 +5,11 @@ on disk and each test is fully isolated via the ``store`` fixture.
 """
 
 import datetime
-from typing import Literal
 
 import pytest
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card, Example, Review, Synonym
+from echoloop.types import CEFR_LEVELS_TYPE
 
 
 @pytest.fixture()
@@ -18,9 +18,7 @@ def store() -> CardStore:
     return CardStore(db_path=":memory:")
 
 
-def _make_card(
-    word: str = "Hund", translation: str = "dog", detected_level: Literal["A1", "A2", "B1", "B2", "C1", "C2"] = "A1"
-) -> Card:
+def _make_card(word: str = "Hund", translation: str = "dog", detected_level: CEFR_LEVELS_TYPE = "A1") -> Card:
     return Card(word=word, translation=translation, detected_level=detected_level)
 
 
