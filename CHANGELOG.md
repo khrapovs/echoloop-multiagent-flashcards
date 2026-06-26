@@ -1,3 +1,9 @@
+## v0.10.0 (2026-06-26)
+
+### Feat
+
+- Add review page for existing cards (#17)
+
 ## v0.9.0 (2026-06-26)
 
 ### Feat
