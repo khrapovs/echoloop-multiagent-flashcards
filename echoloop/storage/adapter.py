@@ -17,6 +17,8 @@ import sqlite3
 from contextlib import contextmanager
 from typing import Generator
 
+from loguru import logger
+
 from echoloop.storage.models import Card, Example, Review, Synonym
 
 # Each entry is a single DDL statement executed individually so we stay
@@ -84,6 +86,7 @@ class CardStore:
     def _open_connection(self) -> sqlite3.Connection:
         """Open a new SQLite connection with FK enforcement and a row factory."""
         conn = sqlite3.connect(self._db_path)
+        logger.debug(f"Connected to database: {self._db_path}")
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")
         return conn
@@ -114,11 +117,13 @@ class CardStore:
                 raise
             finally:
                 conn.close()
+                logger.debug("Connection closed")
 
     def _init_schema(self) -> None:
         with self._connection() as conn:
             for stmt in _DDL_STATEMENTS:
                 conn.execute(stmt)
+        logger.debug("Schema initialized")
 
     # ------------------------------------------------------------------
     # cards table

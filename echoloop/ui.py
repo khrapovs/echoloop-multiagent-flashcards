@@ -6,6 +6,9 @@ Entry point:
 
 import streamlit as st
 
+from echoloop.constants import _DB_PATH
+from echoloop.storage.adapter import CardStore
+
 # ---------------------------------------------------------------------------
 # Page config — must be the very first Streamlit call
 # ---------------------------------------------------------------------------
@@ -86,16 +89,8 @@ st.markdown(
         flex-wrap: wrap;
         margin-bottom: 0.4rem;
     }
-    .fc-word {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #ffffff;
-    }
-    .fc-translation {
-        font-size: 1.25rem;
-        color: #9CA3AF;
-        font-style: italic;
-    }
+    .fc-word  { font-size: 2.2rem; font-weight: 700; color: #ffffff; }
+    .fc-translation { font-size: 1.25rem; color: #9CA3AF; font-style: italic; }
 
     /* CEFR badge */
     .cefr-badge {
@@ -119,24 +114,30 @@ st.markdown(
         color: #6C63FF;
         margin-bottom: 0.3rem;
     }
-    .fc-sentence-de {
-        font-size: 1.1rem;
-        color: #e2e8f0;
-        margin-bottom: 0.15rem;
-    }
-    .fc-sentence-en {
-        font-size: 0.95rem;
-        color: #9CA3AF;
-        font-style: italic;
-    }
+    .fc-sentence-de { font-size: 1.1rem; color: #e2e8f0; margin-bottom: 0.15rem; }
+    .fc-sentence-en { font-size: 0.95rem; color: #9CA3AF; font-style: italic; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
+
 # ---------------------------------------------------------------------------
-# Hero header
+# Database — initialise once per process, shared across all reruns
 # ---------------------------------------------------------------------------
+@st.cache_resource
+def _get_store():
+    """Return the singleton CardStore (created once, reused across reruns)."""
+    return CardStore(db_path=str(_DB_PATH))
+
+
+store = _get_store()
+
+# ---------------------------------------------------------------------------
+# Hero header + card counter
+# ---------------------------------------------------------------------------
+total_cards = len(store.list_cards())
+
 st.markdown(
     """
     <div class="hero">
@@ -147,12 +148,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+if total_cards:
+    st.caption(f"📚 {total_cards} card{'s' if total_cards != 1 else ''} saved in your deck")
+
 st.divider()
 
 # ---------------------------------------------------------------------------
 # Word input form
 # ---------------------------------------------------------------------------
-with st.form(key="word_form", clear_on_submit=False):
+with st.form(key="word_form", clear_on_submit=True):
     word = st.text_input(
         label="German word",
         placeholder="e.g. Hund, Katze, Freundschaft …",
@@ -172,24 +176,48 @@ if submitted:
         with st.spinner(f"Generating flashcard for **{word}** …"):
             try:
                 from echoloop.runner import run_context_agent  # noqa: PLC0415
+                from echoloop.storage.models import Card, Example  # noqa: PLC0415
 
-                card = run_context_agent(word)
+                flashcard = run_context_agent(word)
             except Exception as exc:
                 st.error(f"Failed to generate flashcard: {exc}", icon="❌")
                 st.stop()
 
+        # Persist the card (or skip silently if the word already exists).
+        existing = store.get_card_by_word(flashcard.word)
+        if existing is None:
+            saved_card = store.insert_card(
+                Card(
+                    word=flashcard.word,
+                    translation=flashcard.translation,
+                    detected_level=flashcard.detected_level,
+                )
+            )
+            store.insert_example(
+                Example(
+                    card_id=saved_card.id,
+                    sentence=flashcard.example_sentence_german,
+                    translation=flashcard.example_sentence_english,
+                )
+            )
+            save_label = "✅ Saved to your deck"
+        else:
+            save_label = "ℹ️ Already in your deck"
+
+        # Render the flashcard.
         st.markdown(
             f"""
             <div class="flashcard">
                 <div class="fc-headline">
-                    <span class="fc-word">{card.word}</span>
-                    <span class="fc-translation">{card.translation}</span>
+                    <span class="fc-word">{flashcard.word}</span>
+                    <span class="fc-translation">{flashcard.translation}</span>
                 </div>
-                <div class="cefr-badge">{card.detected_level}</div>
+                <div class="cefr-badge">{flashcard.detected_level}</div>
                 <div class="fc-section-label">Example sentence</div>
-                <div class="fc-sentence-de">🇩🇪 {card.example_sentence_german}</div>
-                <div class="fc-sentence-en">🇬🇧 {card.example_sentence_english}</div>
+                <div class="fc-sentence-de">🇩🇪 {flashcard.example_sentence_german}</div>
+                <div class="fc-sentence-en">🇬🇧 {flashcard.example_sentence_english}</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
+        st.success(save_label)
