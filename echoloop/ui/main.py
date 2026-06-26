@@ -31,6 +31,6 @@ st.divider()
 
 col_add, col_review = st.columns(2)
 with col_add:
-    st.page_link("pages/1_Add_Card.py", label="➕ Add Card", use_container_width=True)
+    st.page_link("pages/add_card.py", label="➕ Add Card", use_container_width=True)
 with col_review:
-    st.page_link("pages/2_Review.py", label="📖 Review", use_container_width=True)
+    st.page_link("pages/review.py", label="📖 Review", use_container_width=True)
