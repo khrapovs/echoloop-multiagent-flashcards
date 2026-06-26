@@ -1,3 +1,9 @@
+## v0.8.0 (2026-06-26)
+
+### Feat
+
+- Spaced repetition engine (#15)
+
 ## v0.7.0 (2026-06-24)
 
 ### Feat
