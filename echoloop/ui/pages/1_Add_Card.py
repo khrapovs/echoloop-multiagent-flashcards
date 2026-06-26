@@ -5,7 +5,6 @@ Entry point:
 """
 
 import streamlit as st
-
 from echoloop.constants import _DB_PATH
 from echoloop.storage.adapter import CardStore
 from echoloop.ui.styles import inject_styles
