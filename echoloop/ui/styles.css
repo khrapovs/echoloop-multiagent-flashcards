@@ -94,3 +94,66 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
 }
 .fc-sentence-de { font-size: 1.1rem; color: #e2e8f0; margin-bottom: 0.15rem; }
 .fc-sentence-en { font-size: 0.95rem; color: #9CA3AF; font-style: italic; }
+
+/* ── Review page ─────────────────────────────────────────────────────────── */
+
+/* Large word prompt shown during review */
+.review-word {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    padding: 2.5rem 0 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+/* Subtle prompt beneath the word */
+.review-hint {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin-bottom: 2rem;
+}
+
+/* Answer card that slides in after reveal */
+.review-answer {
+    background: linear-gradient(145deg, #1e1e2e, #2a2a3e);
+    border: 1.5px solid #6C63FF44;
+    border-radius: 20px;
+    padding: 1.6rem 2rem;
+    margin: 1rem 0 1.5rem;
+    box-shadow: 0 8px 32px #6C63FF18;
+    animation: fadeSlideIn 0.35s ease;
+}
+.review-translation {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.8rem;
+}
+
+/* Rating label above the buttons */
+.rating-label {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6C63FF;
+    margin-bottom: 0.4rem;
+}
+
+/* Session-complete banner */
+.session-complete {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+.session-complete h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6C63FF 0%, #48C8E8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+.session-complete p { color: #9CA3AF; font-size: 1.05rem; }
