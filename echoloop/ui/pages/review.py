@@ -180,9 +180,11 @@ if not st.session_state.revealed:
     st.stop()
 
 # ── Answer card ──────────────────────────────────────────────────────────────
-examples = store.get_examples_for_card(card.id)
+examples = store.get_examples_for_card(card.id) if card.id is not None else []
+
 example_html = ""
-if examples:
+
+if len(examples) > 0:
     ex = examples[0]
     example_html = (
         f'<div class="fc-section-label">Example sentence</div>'
@@ -207,12 +209,7 @@ st.markdown('<div class="rating-label">How well did you remember?</div>', unsafe
 cols = st.columns(6)
 for score, col in enumerate(cols):
     with col:
-        if st.button(
-            _RATING_LABELS[score],
-            key=f"rate_{score}",
-            use_container_width=True,
-            help=f"Score {score}",
-        ):
+        if st.button(_RATING_LABELS[score], key=f"rate_{score}", use_container_width=True, help=f"Score {score}"):
             # Compute new SM-2 metrics and persist.
             metrics = engine.calculate_next_review(card, review_score=score)
             updated = card.model_copy(
@@ -224,7 +221,8 @@ for score, col in enumerate(cols):
                 }
             )
             store.update_card(updated)
-            store.insert_review(Review(card_id=card.id, rating_score=score))
+            if card.id:
+                store.insert_review(Review(card_id=card.id, rating_score=score))
 
             # Advance the queue.
             st.session_state.review_index += 1
