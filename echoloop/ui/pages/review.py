@@ -6,12 +6,10 @@ Pattern
    st.session_state so the queue is stable across reruns.
 2. Show the current card's German word and wait for the user to recall.
 3. After the user reveals the answer, display translation + example sentence.
-4. Present a 0–5 rating row; on rating, update SM-2 fields + write a review
+4. Present a 0-5 rating row; on rating, update SM-2 fields + write a review
    record, then advance to the next card.
 5. When the queue is exhausted, show a session-complete summary.
 """
-
-from __future__ import annotations
 
 import datetime
 
