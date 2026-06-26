@@ -221,7 +221,7 @@ for score, col in enumerate(cols):
                 }
             )
             store.update_card(updated)
-            if card.id:
+            if card.id is not None:
                 store.insert_review(Review(card_id=card.id, rating_score=score))
 
             # Advance the queue.
