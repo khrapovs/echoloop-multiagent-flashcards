@@ -4,10 +4,10 @@ Entry point:
     uv run echoloop
 """
 
-from __future__ import annotations
-
 import streamlit as st
 
+from echoloop.constants import _DB_PATH
+from echoloop.storage.adapter import CardStore
 from echoloop.ui.styles import inject_styles
 
 # ---------------------------------------------------------------------------
@@ -25,9 +25,7 @@ inject_styles()
 @st.cache_resource
 def _get_store():
     """Return the singleton CardStore (created once, reused across reruns)."""
-    from echoloop.storage import get_store  # noqa: PLC0415
-
-    return get_store()
+    return CardStore(db_path=str(_DB_PATH))
 
 
 store = _get_store()
