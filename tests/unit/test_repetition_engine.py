@@ -28,19 +28,17 @@ def engine(store: CardStore) -> RepetitionEngine:
     return RepetitionEngine(store=store)
 
 
-def _card(**kwargs) -> Card:
+def _card(word: str = "Hund", detected_level: str = "A1", repetitions=0, interval_days=1, easiness_factor=2.5) -> Card:
     """Build a Card with sensible SM-2 defaults, overridable via kwargs."""
-    defaults: dict = dict(
-        word="Hund",
+    return Card(
+        word=word,
         translation="dog",
-        detected_level="A1",
-        easiness_factor=2.5,
-        interval_days=1,
-        repetitions=0,
+        detected_level=detected_level,
+        easiness_factor=easiness_factor,
+        interval_days=interval_days,
+        repetitions=repetitions,
         next_review_date=datetime.date.today(),
     )
-    defaults.update(kwargs)
-    return Card(**defaults)
 
 
 # ---------------------------------------------------------------------------
