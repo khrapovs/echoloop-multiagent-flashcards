@@ -12,7 +12,7 @@ from echoloop.ui.styles import inject_styles
 # ---------------------------------------------------------------------------
 # Page config — must be the very first Streamlit call
 # ---------------------------------------------------------------------------
-st.set_page_config(page_title="EchoLoop", page_icon="🔁", layout="centered")
+st.set_page_config(page_title="Add Card", page_icon="🔁", layout="centered")
 
 inject_styles()
 
@@ -38,7 +38,7 @@ st.markdown(
     """
     <div class="hero">
         <h1>🔁 EchoLoop</h1>
-        <p>Your AI-powered German ↔ English flashcard generator</p>
+        <p>Add your words here</p>
     </div>
     """,
     unsafe_allow_html=True,

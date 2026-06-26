@@ -23,7 +23,8 @@ from echoloop.ui.styles import inject_styles
 # ---------------------------------------------------------------------------
 # Page config
 # ---------------------------------------------------------------------------
-st.set_page_config(page_title="EchoLoop · Review", page_icon="🔁", layout="centered")
+st.set_page_config(page_title="Review", page_icon="🔁", layout="centered")
+
 inject_styles()
 
 
