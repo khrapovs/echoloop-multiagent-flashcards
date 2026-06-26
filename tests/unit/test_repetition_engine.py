@@ -10,6 +10,7 @@ import pytest
 from echoloop.repetition_engine import CardMetrics, RepetitionEngine
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card
+from echoloop.types import CEFR_LEVELS_TYPE
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -28,7 +29,9 @@ def engine(store: CardStore) -> RepetitionEngine:
     return RepetitionEngine(store=store)
 
 
-def _card(word: str = "Hund", detected_level: str = "A1", repetitions=0, interval_days=1, easiness_factor=2.5) -> Card:
+def _card(
+    word: str = "Hund", detected_level: CEFR_LEVELS_TYPE = "A1", repetitions=0, interval_days=1, easiness_factor=2.5
+) -> Card:
     """Build a Card with sensible SM-2 defaults, overridable via kwargs."""
     return Card(
         word=word,
@@ -174,7 +177,7 @@ class TestGetInferredUserLevel:
         assert engine.get_inferred_user_level() == "A1"
 
     def test_all_levels_present_returns_mode(self, store: CardStore, engine: RepetitionEngine) -> None:
-        for word, level in [
+        cards: list[tuple[str, CEFR_LEVELS_TYPE]] = [
             ("w1", "A1"),
             ("w2", "A2"),
             ("w3", "B1"),
@@ -182,6 +185,7 @@ class TestGetInferredUserLevel:
             ("w5", "B2"),
             ("w6", "C1"),
             ("w7", "C2"),
-        ]:
+        ]
+        for word, level in cards:
             store.insert_card(_card(word=word, detected_level=level))
         assert engine.get_inferred_user_level() == "B1"
