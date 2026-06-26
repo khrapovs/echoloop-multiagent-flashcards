@@ -1,0 +1,96 @@
+/* ── Global font ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+/* ── Hero header ─────────────────────────────────────────────────────────── */
+.hero { text-align: center; padding: 2.5rem 0 1rem; }
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6C63FF 0%, #48C8E8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.25rem;
+}
+.hero p { font-size: 1.05rem; color: #9CA3AF; margin-top: 0; }
+
+/* ── Word input box ──────────────────────────────────────────────────────── */
+div[data-testid="stTextInput"] > div > div > input {
+    font-size: 1.3rem;
+    padding: 0.8rem 1.1rem;
+    border-radius: 12px;
+    border: 2px solid #6C63FF44;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+div[data-testid="stTextInput"] > div > div > input:focus {
+    border-color: #6C63FF;
+    box-shadow: 0 0 0 3px #6C63FF22;
+}
+
+/* ── Primary button ──────────────────────────────────────────────────────── */
+div[data-testid="stButton"] > button[kind="primary"] {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6C63FF, #48C8E8);
+    border: none;
+    color: white;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+}
+div[data-testid="stButton"] > button[kind="primary"]:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+/* ── Flashcard container ─────────────────────────────────────────────────── */
+.flashcard {
+    background: linear-gradient(145deg, #1e1e2e, #2a2a3e);
+    border: 1.5px solid #6C63FF44;
+    border-radius: 20px;
+    padding: 2rem 2.2rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 8px 32px #6C63FF18;
+    animation: fadeSlideIn 0.4s ease;
+}
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Word + translation headline */
+.fc-headline {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+}
+.fc-word        { font-size: 2.2rem; font-weight: 700; color: #ffffff; }
+.fc-translation { font-size: 1.25rem; color: #9CA3AF; font-style: italic; }
+
+/* CEFR badge */
+.cefr-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #6C63FF, #48C8E8);
+    border-radius: 8px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.2rem;
+}
+
+/* Example sentences */
+.fc-section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6C63FF;
+    margin-bottom: 0.3rem;
+}
+.fc-sentence-de { font-size: 1.1rem; color: #e2e8f0; margin-bottom: 0.15rem; }
+.fc-sentence-en { font-size: 0.95rem; color: #9CA3AF; font-style: italic; }

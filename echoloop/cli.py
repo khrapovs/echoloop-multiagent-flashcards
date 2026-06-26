@@ -11,6 +11,6 @@ def run_ui() -> None:
     """
     from streamlit.web import cli as stcli  # noqa: PLC0415
 
-    ui_path = Path(__file__).parent / "ui.py"
+    ui_path = Path(__file__).parent / "ui" / "app.py"
     sys.argv = ["streamlit", "run", ui_path.as_posix()]
     stcli.main()
