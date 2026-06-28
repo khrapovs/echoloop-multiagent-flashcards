@@ -12,8 +12,9 @@ from echoloop.ui.styles import inject_styles
 def get_redirect_uri() -> str:
     """Construct the redirect URI dynamically based on the request headers."""
     headers = st.context.headers
-    proto = headers.get("x-forwarded-proto", "http")
-    host = headers.get("host", "localhost:8501")
+    # Check headers case-insensitively for Cloud Run proxy propagation
+    proto = headers.get("x-forwarded-proto") or headers.get("X-Forwarded-Proto") or "http"
+    host = headers.get("host") or headers.get("Host") or "localhost:8501"
     return f"{proto}://{host}/"
 
 
