@@ -27,8 +27,6 @@ Usage example
 ...         persist(result.card)
 """
 
-from __future__ import annotations
-
 from collections.abc import Iterator
 from typing import Literal
 

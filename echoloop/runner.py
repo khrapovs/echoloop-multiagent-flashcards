@@ -4,8 +4,6 @@ These thin wrappers isolate ADK session/runner boilerplate so that
 both the UI and tests can call agents with a single function call.
 """
 
-from __future__ import annotations
-
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -14,6 +12,7 @@ from google.genai import types
 from echoloop.agents.root_agent import FlashcardContext, root_agent
 from echoloop.agents.synonyms_agent import SynonymsOutput, synonyms_agent
 from echoloop.config import configure_genai
+from echoloop.types import CEFR_LEVELS_TYPE
 
 # Configure GenAI credentials once at the application boundary.
 # Agent modules are pure definitions and do not call configure_genai() themselves.
@@ -60,7 +59,7 @@ def _run_agent(agent, message_text: str, output_key: str, app_name: str) -> dict
     return updated.state
 
 
-def run_context_agent(word: str, inferred_level: str = "A1") -> FlashcardContext:
+def run_context_agent(word: str, inferred_level: CEFR_LEVELS_TYPE = "A1") -> FlashcardContext:
     """Run the context agent for *word* and return a parsed :class:`FlashcardContext`.
 
     Creates a fresh in-memory session for each call so the UI remains
