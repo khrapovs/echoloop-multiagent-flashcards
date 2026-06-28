@@ -241,27 +241,7 @@ When deployed behind Cloud Run, the client's original IP is forwarded by Google'
    --update-env-vars ALLOWED_IPS="YOUR_PUBLIC_IP"
    ```
 2. **Check IP on App Load**:
-   Add a helper function to inspect headers in `main.py` before loading page elements:
-   ```python
-   import os
-   import streamlit as st
-
-   def verify_ip_access() -> bool:
-       allowed_ips_raw = os.getenv("ALLOWED_IPS")
-       if not allowed_ips_raw:
-           return True  # If not set, allow access (local development)
-
-       # Extract client IP from proxy headers
-       headers = st.context.headers
-       client_ip = headers.get("X-Forwarded-For", "").split(",")[0].strip()
-
-       allowed_ips = [ip.strip() for ip in allowed_ips_raw.split(",")]
-       return client_ip in allowed_ips
-
-   if not verify_ip_access():
-       st.error("Access Forbidden: Your IP is not whitelisted.", icon="🚫")
-       st.stop()
-   ```
+   Add a helper function to inspect headers in `main.py` before loading page elements (call `enforce_ip_access()` in the beginning of the `main.py`)
 
 3. **Deploy with restriction**:
    Update your Cloud Run deploy command to supply the environment variable:
