@@ -48,9 +48,9 @@ if "ac_phase" not in st.session_state:
 if "ac_word" not in st.session_state:
     st.session_state.ac_word = ""
 if "ac_candidates" not in st.session_state:
-    st.session_state.ac_candidates: list[str] = []
+    st.session_state.ac_candidates = []
 if "ac_results" not in st.session_state:
-    st.session_state.ac_results: list[FlashcardResult] = []
+    st.session_state.ac_results = []
 
 # ---------------------------------------------------------------------------
 # Hero header
@@ -174,6 +174,7 @@ elif st.session_state.ac_phase == "results":
                         detected_level=fc.detected_level,
                     )
                 )
+                assert saved.id is not None
                 store.insert_example(
                     Example(
                         card_id=saved.id,
