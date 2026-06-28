@@ -18,7 +18,7 @@ class FlashcardContext(BaseModel):
     example_sentence_english: str = Field(description="The English translation of the German example sentence.")
 
 
-root_agent = Agent(
+context_agent = Agent(
     name="context_agent",
     model=Gemini(model="gemini-flash-latest", retry_options=types.HttpRetryOptions(attempts=3)),
     instruction=(

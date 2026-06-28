@@ -4,7 +4,7 @@ Responsibilities
 ----------------
 - Run :class:`~echoloop.agents.synonyms_agent.SynonymsAgent` once on an
   entered word to produce a list of synonym candidates.
-- Run :class:`~echoloop.agents.root_agent.ContextAgent` for each
+- Run :class:`~echoloop.agents.context_agent.ContextAgent` for each
   user-selected word (original + checked synonyms) and yield a
   :class:`FlashcardResult` as each call completes (streaming to the caller).
 - Skip words already present in ``CardStore`` (status ``"skipped"``).
@@ -32,7 +32,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from echoloop.agents.root_agent import FlashcardContext
+from echoloop.agents.context_agent import FlashcardContext
 from echoloop.agents.synonyms_agent import SynonymsOutput
 from echoloop.repetition_engine import RepetitionEngine
 from echoloop.runner import run_context_agent, run_synonyms_agent
@@ -94,7 +94,7 @@ class AgentPipeline:
         """Generate flashcards for each word in *words*, yielding results as they arrive.
 
         The user CEFR level is inferred once before the loop starts and reused
-        for every :class:`~echoloop.agents.root_agent.ContextAgent` call in the
+        for every :class:`~echoloop.agents.context_agent.ContextAgent` call in the
         batch for consistency.
 
         Words that are already present in ``CardStore`` produce a

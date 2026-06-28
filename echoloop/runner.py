@@ -9,7 +9,7 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
-from echoloop.agents.root_agent import FlashcardContext, root_agent
+from echoloop.agents.context_agent import FlashcardContext, context_agent
 from echoloop.agents.synonyms_agent import SynonymsOutput, synonyms_agent
 from echoloop.config import configure_genai
 from echoloop.types import CEFR_LEVELS_TYPE
@@ -80,7 +80,7 @@ def run_context_agent(word: str, inferred_level: CEFR_LEVELS_TYPE = "A1") -> Fla
 
     """
     prompt = f"Create a flashcard for the German word: '{word}'. The user's current CEFR level is {inferred_level}."
-    state = _run_agent(root_agent, prompt, output_key="flashcard_context", app_name="echoloop")
+    state = _run_agent(context_agent, prompt, output_key="flashcard_context", app_name="echoloop")
     return FlashcardContext(**state["flashcard_context"])
 
 

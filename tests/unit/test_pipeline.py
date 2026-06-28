@@ -8,7 +8,7 @@ import datetime
 from unittest.mock import patch
 
 import pytest
-from echoloop.agents.root_agent import FlashcardContext
+from echoloop.agents.context_agent import FlashcardContext
 from echoloop.agents.synonyms_agent import SynonymEntry, SynonymsOutput
 from echoloop.pipeline import AgentPipeline, FlashcardResult
 from echoloop.repetition_engine import RepetitionEngine
