@@ -4,9 +4,6 @@ set -euo pipefail
 # EchoLoop Deployment Orchestrator
 # Builds container remotely via Cloud Build and deploys Cloud Run via Terraform.
 
-PROJECT_ID="echoloop-500808"
-REGION="europe-west4"
-STATE_BUCKET="echoloop-tf-state"
 source .env
 
 echo "=== 1. Setting target GCP project ==="
