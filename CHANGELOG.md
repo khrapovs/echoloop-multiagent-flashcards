@@ -1,3 +1,9 @@
+## v0.11.0 (2026-06-28)
+
+### Feat
+
+- Chain two agents. First generate synonyms and then cards for each of them. (#18)
+
 ## v0.10.0 (2026-06-26)
 
 ### Feat
