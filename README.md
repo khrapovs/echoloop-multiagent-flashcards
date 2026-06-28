@@ -97,6 +97,32 @@ graph TD
    ```
    This will spin up Streamlit and open the UI at [http://localhost:8501](http://localhost:8501).
 
+### Code Quality (Pre-commits & Linting)
+Before submitting code, ensure that all linting checks pass. The project uses `prek` for checking commits:
+
+```bash
+prek install
+```
+
+Run linting manually
+
+```bash
+uv run prek run -v --show-diff-on-failure
+uv run ty check
+```
+
+### Running Tests
+Make sure the entire test suite passes successfully.
+
+* **Run Unit Tests** (offline/mocked):
+  ```bash
+  uv run pytest tests/unit -v
+  ```
+* **Run Integration Tests** (requires `GOOGLE_API_KEY`):
+  ```bash
+  uv run pytest tests/integration -v
+  ```
+
 ---
 
 ## 🚀 Deployment to Google Cloud Platform (GCP)
@@ -127,33 +153,3 @@ To bootstrap infrastructure and deploy the application:
    Your EchoLoop UI is accessible at: https://echoloop-ui-xxxxxx.a.run.app
    ```
    *Only requests coming from your whitelisted IP address will be allowed to render pages.*
-
----
-
-## 🧪 Contribution & Development
-
-### Code Quality (Pre-commits & Linting)
-Before submitting code, ensure that all linting checks pass. The project uses `prek` for checking commits:
-
-```bash
-prek install
-```
-
-Run linting manually
-
-```bash
-uv run prek run -v --show-diff-on-failure
-uv run ty check
-```
-
-### Running Tests
-Make sure the entire test suite passes successfully.
-
-* **Run Unit Tests** (offline/mocked):
-  ```bash
-  uv run pytest tests/unit -v
-  ```
-* **Run Integration Tests** (requires `GOOGLE_API_KEY`):
-  ```bash
-  uv run pytest tests/integration -v
-  ```
