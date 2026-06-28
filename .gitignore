@@ -11,3 +11,5 @@ dist/
 .adk/
 .terraform/
 *.tfstate
+*.log
+.terraform.lock.hcl
