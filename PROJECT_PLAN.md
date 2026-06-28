@@ -224,3 +224,87 @@ gcloud run deploy echoloop-ui \
 
 ### Step 5: Verify the Deployed App
 Retrieve the Service URL from the command output and open it in your browser. Verify that words can be added, and that refresh/restarts preserve the database card count.
+
+---
+
+## Security & IP Whitelisting (MVP Access Control)
+
+To ensure the deployed application is only accessible to yourself, we must restrict ingress traffic. For a simple MVP deployment on GCP, there are two recommended approaches. We document both the **Cloud Native approach** (robust, infrastructure-level) and the **Application-Level approach** (simple, low-overhead).
+
+### Option 1: Cloud Load Balancing + Cloud Armor (GCP Native)
+
+This is the standard infrastructure-level approach on GCP to enforce IP whitelisting.
+
+```mermaid
+graph TD
+    User([Your IP Address]) -->|Allowed| ALB[Application Load Balancer]
+    Untrusted([Other IP Address]) -->|Blocked: 403 Forbidden| Armor[Google Cloud Armor Security Policy]
+    ALB --> Armor
+    Armor -->|Forwarded Ingress| UI[Cloud Run Service]
+```
+
+#### Steps to Configure:
+1. **Change Cloud Run Ingress**: Set the ingress settings of your Cloud Run service to internal and load-balancing only:
+   ```bash
+   gcloud run services update echoloop-ui \
+       --ingress internal-and-cloud-load-balancing \
+       --region us-east1
+   ```
+2. **Create a Cloud Armor Security Policy**:
+   ```bash
+   # Create policy
+   gcloud compute security-policies create echoloop-armor-policy \
+       --description "Restrict access to EchoLoop MVP"
+
+   # Change default rule to deny all traffic (403)
+   gcloud compute security-policies rules update 2147483647 \
+       --security-policy echoloop-armor-policy \
+       --action deny-403
+
+   # Add rule to allow only your public IP address
+   gcloud compute security-policies rules create 1000 \
+       --security-policy echoloop-armor-policy \
+       --src-ip-ranges "YOUR_PUBLIC_IP/32" \
+       --action allow \
+       --description "Allow my IP address only"
+   ```
+3. **Deploy Application Load Balancer (ALB)**:
+   * Setup a Serverless Network Endpoint Group (NEG) pointing to the Cloud Run service.
+   * Attach the NEG to a backend service.
+   * Associate the backend service with the Cloud Armor policy `echoloop-armor-policy`.
+
+---
+
+### Option 2: Programmatic IP Whitelisting in Streamlit (Zero-Infrastructure MVP)
+
+If you want to avoid the setup time and costs associated with Application Load Balancers, we can enforce a simple IP whitelist directly in the application code.
+
+Streamlit can inspect HTTP headers. When deployed behind Cloud Run, the client's original IP is passed in the `X-Forwarded-For` header.
+
+#### Implementation Steps:
+1. **Configure Allowed IPs**: Add an environment variable in Cloud Run containing your whitelisted IPs (comma-separated):
+   ```bash
+   --update-env-vars ALLOWED_IPS="YOUR_PUBLIC_IP"
+   ```
+2. **Check IP on App Load**:
+   Add a helper function to inspect headers in `main.py` before loading page elements:
+   ```python
+   import os
+   import streamlit as st
+
+   def verify_ip_access() -> bool:
+       allowed_ips_raw = os.getenv("ALLOWED_IPS")
+       if not allowed_ips_raw:
+           return True  # If not set, allow access (local development)
+
+       # Extract client IP from proxy headers
+       headers = st.context.headers
+       client_ip = headers.get("X-Forwarded-For", "").split(",")[0].strip()
+
+       allowed_ips = [ip.strip() for ip in allowed_ips_raw.split(",")]
+       return client_ip in allowed_ips
+
+   if not verify_ip_access():
+       st.error("Access Forbidden: Your IP is not whitelisted.", icon="🚫")
+       st.stop()
+   ```
