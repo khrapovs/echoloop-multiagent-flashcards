@@ -10,7 +10,7 @@ the user to the two pages inside the ``pages/`` folder:
 
 import streamlit as st
 
-from echoloop.ui.auth import enforce_ip_access  # noqa: E402
+from echoloop.ui.auth import enforce_ip_access
 from echoloop.ui.styles import inject_styles
 
 st.set_page_config(page_title="EchoLoop", page_icon="🔁", layout="centered")
