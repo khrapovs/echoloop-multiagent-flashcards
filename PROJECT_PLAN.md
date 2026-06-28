@@ -177,34 +177,6 @@ gcloud storage buckets create gs://echoloop-sqlite-store --location=us-east1
 
 ### Step 2: Write a Dockerfile
 Create a `Dockerfile` at the root of the project to package the application.
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-
-# Install uv for fast package management
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-# Copy dependency files and install them
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
-
-# Copy application files
-COPY echoloop/ ./echoloop/
-
-# Expose Streamlit port
-EXPOSE 8501
-
-# Environment variable to point database to mounted GCS bucket path
-ENV ECHOLOOP_DB_DIR=/data
-ENV PORT=8501
-
-# Run the UI app
-CMD ["uv", "run", "streamlit", "run", "echoloop/ui/main.py", "--server.port=8501", "--server.address=0.0.0.0"]
-```
 
 ### Step 3: Configure Database Directory Override in Code
 We update `constants.py` to check for the `ECHOLOOP_DB_DIR` environment variable, defaulting to `/data/echoloop.db` when deployed, but fallback to the repository root locally.
