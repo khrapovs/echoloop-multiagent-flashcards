@@ -1,3 +1,9 @@
+## v0.14.0 (2026-06-28)
+
+### Feat
+
+- Implement Google SSO authentication (#23)
+
 ## v0.13.0 (2026-06-28)
 
 ### Feat
