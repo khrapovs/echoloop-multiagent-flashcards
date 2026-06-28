@@ -10,13 +10,13 @@ the user to the two pages inside the ``pages/`` folder:
 
 import streamlit as st
 
-from echoloop.ui.auth import enforce_ip_access
+from echoloop.ui.auth import enforce_google_sso
 from echoloop.ui.styles import inject_styles
 
 st.set_page_config(page_title="EchoLoop", page_icon="🔁", layout="centered")
 
 
-enforce_ip_access()
+enforce_google_sso()
 
 inject_styles()
 

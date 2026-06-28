@@ -1,4 +1,4 @@
-"""Unit tests for UI IP access control (auth.py)."""
+"""Unit tests for Google SSO access control (auth.py)."""
 
 from __future__ import annotations
 
@@ -7,18 +7,28 @@ from collections.abc import Iterator
 from unittest.mock import MagicMock, patch
 
 import pytest
-from echoloop.ui.auth import verify_ip_access
+from echoloop.ui.auth import enforce_google_sso, get_redirect_uri, verify_email_whitelist
 
 
 @pytest.fixture()
 def clean_env() -> Iterator[None]:
-    """Ensure ALLOWED_IPS is not set in environment during test."""
-    old_val = os.environ.get("ALLOWED_IPS")
-    if "ALLOWED_IPS" in os.environ:
-        del os.environ["ALLOWED_IPS"]
+    """Ensure environment is clean of OAuth settings before each test."""
+    old_env = {k: os.environ.get(k) for k in ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "ALLOWED_EMAILS"]}
+    for k in old_env:
+        if k in os.environ:
+            del os.environ[k]
     yield
-    if old_val is not None:
-        os.environ["ALLOWED_IPS"] = old_val
+    for k, v in old_env.items():
+        if v is not None:
+            os.environ[k] = v
+
+
+@pytest.fixture()
+def clean_session() -> Iterator[dict]:
+    """Provide a clean session state dictionary."""
+    session = {}
+    with patch("streamlit.session_state", session):
+        yield session
 
 
 # Mark all tests in this module to automatically use the clean_env fixture
@@ -32,47 +42,122 @@ def _mock_context(headers: dict[str, str]) -> MagicMock:
     return mock_ctx
 
 
-def test_allows_all_when_no_env_configured() -> None:
-    """If ALLOWED_IPS is not defined, verify_ip_access should return True (local dev)."""
-    assert verify_ip_access() is True
+# ---------------------------------------------------------------------------
+# get_redirect_uri
+# ---------------------------------------------------------------------------
 
 
-def test_denies_access_if_header_missing() -> None:
-    """If ALLOWED_IPS is set but header is missing, deny access."""
-    os.environ["ALLOWED_IPS"] = "192.168.1.1"
-    mock_ctx = _mock_context({})
-    with patch("streamlit.context", mock_ctx):
-        assert verify_ip_access() is False
+class TestGetRedirectUri:
+    def test_local_default_uri(self) -> None:
+        mock_ctx = _mock_context({"host": "localhost:8501"})
+        with patch("streamlit.context", mock_ctx):
+            assert get_redirect_uri() == "http://localhost:8501/"
+
+    def test_production_forwarded_headers(self) -> None:
+        mock_ctx = _mock_context({
+            "x-forwarded-proto": "https",
+            "host": "echoloop-ui-xxxx.a.run.app",
+        })
+        with patch("streamlit.context", mock_ctx):
+            assert get_redirect_uri() == "https://echoloop-ui-xxxx.a.run.app/"
 
 
-def test_allows_access_if_client_ip_matches_whitelisted() -> None:
-    """If client IP matches a single whitelist entry, allow access."""
-    os.environ["ALLOWED_IPS"] = "1.2.3.4"
-    mock_ctx = _mock_context({"X-Forwarded-For": "1.2.3.4"})
-    with patch("streamlit.context", mock_ctx):
-        assert verify_ip_access() is True
+# ---------------------------------------------------------------------------
+# verify_email_whitelist
+# ---------------------------------------------------------------------------
 
 
-def test_allows_access_with_multiple_ips_whitelisted() -> None:
-    """Test matching against multiple comma-separated whitelisted IPs."""
-    os.environ["ALLOWED_IPS"] = "1.2.3.4, 5.6.7.8, 10.11.12.13"
-    mock_ctx = _mock_context({"X-Forwarded-For": "5.6.7.8"})
-    with patch("streamlit.context", mock_ctx):
-        assert verify_ip_access() is True
+class TestVerifyEmailWhitelist:
+    def test_allows_all_when_no_env_set(self) -> None:
+        assert verify_email_whitelist("any@gmail.com") is True
+
+    def test_allows_matching_email(self) -> None:
+        os.environ["ALLOWED_EMAILS"] = "test@gmail.com"
+        assert verify_email_whitelist("test@gmail.com") is True
+
+    def test_allows_matching_case_insensitive(self) -> None:
+        os.environ["ALLOWED_EMAILS"] = "TEST@gmail.com"
+        assert verify_email_whitelist("test@gmail.com") is True
+
+    def test_denies_unlisted_email(self) -> None:
+        os.environ["ALLOWED_EMAILS"] = "allowed@gmail.com"
+        assert verify_email_whitelist("hacker@gmail.com") is False
+
+    def test_matches_in_multiple_whitelisted_emails(self) -> None:
+        os.environ["ALLOWED_EMAILS"] = "friend1@gmail.com, friend2@gmail.com, me@gmail.com"
+        assert verify_email_whitelist("me@gmail.com") is True
 
 
-def test_denies_access_if_client_ip_not_whitelisted() -> None:
-    """If client IP does not match any entry, deny access."""
-    os.environ["ALLOWED_IPS"] = "1.2.3.4, 5.6.7.8"
-    mock_ctx = _mock_context({"X-Forwarded-For": "9.9.9.9"})
-    with patch("streamlit.context", mock_ctx):
-        assert verify_ip_access() is False
+# ---------------------------------------------------------------------------
+# enforce_google_sso
+# ---------------------------------------------------------------------------
 
 
-def test_extracts_first_ip_from_proxy_chain() -> None:
-    """Google Cloud Front-ends append IPs to X-Forwarded-For. Verify we grab the first (client)."""
-    os.environ["ALLOWED_IPS"] = "1.2.3.4"
-    # Proxy chain: Client, Proxy1, Proxy2
-    mock_ctx = _mock_context({"X-Forwarded-For": "1.2.3.4, 35.190.0.1, 130.211.0.2"})
-    with patch("streamlit.context", mock_ctx):
-        assert verify_ip_access() is True
+class TestEnforceGoogleSSO:
+    def test_bypasses_auth_if_credentials_missing(self, clean_session: dict) -> None:
+        """If GOOGLE_CLIENT_ID is missing, bypass authorization (for dev)."""
+        with patch("streamlit.sidebar") as mock_sidebar:
+            enforce_google_sso()
+        mock_sidebar.warning.assert_called_once()
+        assert "auth_email" not in clean_session
+
+    def test_allows_already_authenticated_user(self, clean_session: dict) -> None:
+        """If auth_email is in session_state, let the page load without redirecting."""
+        os.environ["GOOGLE_CLIENT_ID"] = "client123"
+        os.environ["GOOGLE_CLIENT_SECRET"] = "secret123"
+        clean_session["auth_email"] = "me@gmail.com"
+
+        with patch("streamlit.sidebar") as mock_sidebar:
+            enforce_google_sso()
+
+        mock_sidebar.markdown.assert_called_once_with("👤 **Logged in as:**\n`me@gmail.com`")
+
+    def test_handles_successful_oauth_callback(self, clean_session: dict) -> None:
+        """If code param is in url, exchange it and authenticate the user."""
+        os.environ["GOOGLE_CLIENT_ID"] = "client123"
+        os.environ["GOOGLE_CLIENT_SECRET"] = "secret123"
+        os.environ["ALLOWED_EMAILS"] = "user@gmail.com"
+
+        # Mock Streamlit URL query parameters
+        mock_query = {"code": "authcode123"}
+        # Mock requests.post (token exchange) and requests.get (userinfo email lookup)
+        mock_post_resp = MagicMock()
+        mock_post_resp.json.return_value = {"access_token": "token123"}
+        mock_get_resp = MagicMock()
+        mock_get_resp.json.return_value = {"email": "user@gmail.com"}
+
+        mock_ctx = _mock_context({"host": "localhost:8501"})
+
+        with (
+            patch("streamlit.query_params", mock_query),
+            patch("streamlit.context", mock_ctx),
+            patch("requests.post", return_value=mock_post_resp) as mock_post,
+            patch("requests.get", return_value=mock_get_resp) as mock_get,
+            patch("streamlit.rerun") as mock_rerun,
+        ):
+            enforce_google_sso()
+
+        # Token exchange called with code
+        mock_post.assert_called_once()
+        # Profile lookup called with header token
+        mock_get.assert_called_once()
+        assert clean_session.get("auth_email") == "user@gmail.com"
+        mock_rerun.assert_called_once()
+
+    def test_redirects_unauthenticated_user_to_login(self, clean_session: dict) -> None:
+        """If unauthenticated and no code callback, draw the Google Login redirect button."""
+        os.environ["GOOGLE_CLIENT_ID"] = "client123"
+        os.environ["GOOGLE_CLIENT_SECRET"] = "secret123"
+
+        mock_query = {}
+        mock_ctx = _mock_context({"host": "localhost:8501"})
+
+        with (
+            patch("streamlit.query_params", mock_query),
+            patch("streamlit.context", mock_ctx),
+            patch("streamlit.stop") as mock_stop,
+        ):
+            enforce_google_sso()
+
+        mock_stop.assert_called_once()
+        assert "auth_email" not in clean_session
