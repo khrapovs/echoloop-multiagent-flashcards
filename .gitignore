@@ -13,3 +13,4 @@ dist/
 *.tfstate
 *.log
 .terraform.lock.hcl
+artifacts/
