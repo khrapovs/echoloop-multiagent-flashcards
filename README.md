@@ -14,7 +14,7 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 * **Synonym Verification Checklist**: Allows you to check/uncheck generated synonyms before batch-generating flashcards.
 * **Spaced Repetition Scheduler**: Employs the **SuperMemo-2 (SM-2)** scheduling algorithm (calculating Easiness Factor, repetitions, and intervals) to queue cards due for review.
 * **Interactive Session-based Review**: Flip cards to see answers, rate your recall from 0 to 5, and dynamically save metrics.
-* **Zero-Cost Secure Deployment**: Deploys to Google Cloud Run with GCS volume persistence and programmatic IP whitelisting to guarantee private access with $0.00 idle running costs.
+* **Zero-Cost Secure Deployment**: Deploys to Google Cloud Run with GCS volume persistence and programmatic Google SSO (OAuth2) with email whitelisting to guarantee private access with $0.00 idle running costs.
 
 ---
 
