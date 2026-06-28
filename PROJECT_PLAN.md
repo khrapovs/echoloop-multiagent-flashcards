@@ -15,32 +15,71 @@ We are designing this application using **Google's Agent Development Kit (ADK)**
 - **Frontend**: Streamlit (Python-only UI) for the MVP prototype.
 - **Language Scope**: German (target language) to English (native/base language).
 
+---
+
+## User Flow — Card Generation
+
+```
+User enters one German word
+        │
+        ▼
+SynonymsAgent  →  returns up to 5 synonyms
+        │
+        ▼
+UI shows original word + synonyms as a checklist
+User deselects any words they don't want cards for
+        │
+        ▼
+[Generate] button
+        │
+        ▼
+AgentPipeline.generate_card_batch(selected_words, inferred_level)
+  ├── Infers user level once (RepetitionEngine.get_inferred_user_level())
+  ├── For each selected word (original + checked synonyms):
+  │     ContextAgent  →  FlashcardContext
+  │     → Save card + example to CardStore   (skip if word already exists)
+  │     → Stream card to UI as it arrives
+  └── After all complete: show summary panel listing saved words
+      (words that failed are listed separately at the end)
+```
+
 ```mermaid
 graph TD
-    Client[Streamlit UI] -->|Inputs word & starts study session| RepetitionEngine[Repetition Engine]
-    RepetitionEngine -->|Queries & updates state| CardStore[Card Store SQLite Adapter]
-    Client -->|Triggers card generation| PipelineManager[Pipeline Manager]
-    
-    subgraph AgentPipeline [ADK Agent Generation Pipeline]
-        PipelineManager -->|Run first| ContextAgent[Context & Difficulty Agent]
-        ContextAgent -->|Outputs sentence & CEFR level| SynonymsAgent[Synonyms & Relations Agent]
-        ContextAgent -.->|Future Extension| ImageAgent[Image Illustration Agent]
+    Client[Streamlit UI] -->|1. Enter word| SynonymsAgent[Synonyms Agent]
+    SynonymsAgent -->|2. Return synonym list| Client
+    Client -->|3. User checks words, clicks Generate| Pipeline[AgentPipeline.generate_card_batch]
+
+    Pipeline -->|4. Infer user level once| RepetitionEngine[Repetition Engine]
+    RepetitionEngine -->|reads level distribution| CardStore[Card Store · SQLite]
+
+    subgraph AgentPipeline [ADK Agent Generation Pipeline — per selected word]
+        Pipeline -->|5. For each word| ContextAgent[Context & Difficulty Agent]
+        ContextAgent -..->|Future Extension| ImageAgent[Image Illustration Agent]
     end
-    
-    ContextAgent -->|Save results| CardStore
-    SynonymsAgent -->|Save results| CardStore
+
+    ContextAgent -->|6a. Stream card to UI| Client
+    ContextAgent -->|6b. Save card + example| CardStore
+
+    Client -->|Starts study session| RepetitionEngine
+    RepetitionEngine -->|Queries & updates SM-2 state| CardStore
 ```
 
 ---
 
-## Proposed Changes & Module Breakdown
+## Module Breakdown
 
 ### 1. Agentic Generation Pipeline (`AgentPipeline`)
-- **Seam**: A clean Python interface wrapper over our ADK agents.
+- **Seam**: A single batch entry point called by the UI.
 - **Implementation**: Written using the Google ADK Python SDK.
-- **Orchestration**: A sequential pipeline executing the `ContextAgent` first (to establish the sentence, translation, and word difficulty), followed by the `SynonymsAgent`. Image generation is deferred as a future hook.
+- **Orchestration**: Runs `SynonymsAgent` once on the entered word to get candidate words, then runs `ContextAgent` sequentially for each user-selected word (original + synonyms). Image generation is deferred as a future hook.
 - **Interface**:
-  - `async def generate_card(word: str, inferred_user_level: str) -> FlashcardData`
+  - `def get_synonyms(word: str) -> SynonymsOutput` — calls `SynonymsAgent`; returns the structured synonym list so the UI can render the checklist.
+  - `def generate_card_batch(words: list[str], inferred_level: str) -> Iterator[FlashcardResult]` — yields one `FlashcardResult` per word as each `ContextAgent` call completes; skips words already in the DB; captures per-word failures without aborting the batch.
+- **`FlashcardResult`** (new data class):
+  - `word: str`
+  - `card: FlashcardContext | None` — `None` on failure or if word was already in DB
+  - `status: Literal["saved", "skipped", "failed"]`
+  - `error: str | None`
 
 ### 2. Storage Adapter (`CardStore`)
 - **Seam**: An interface managing raw data persistence and queries.
@@ -60,8 +99,32 @@ graph TD
   - `def get_inferred_user_level() -> str`
 
 ### 4. User Interface (`UI`)
-- **Seam**: Interactive Streamlit interface.
-- **Depth**: Hides view layout, form handling, card flip visuals, progress bars, and transient session queues. Runs in an **Interactive Session-based Review** pattern: fetches all due cards upfront and lets the user step through them.
+- **Seam**: Interactive Streamlit interface — two pages.
+- **Depth**: Hides view layout, form handling, streaming card display, progress bars, and transient session queues.
+
+#### Page 1 — Add Card
+1. Word input form.
+2. On submit: call `AgentPipeline.get_synonyms(word)` → display checklist of original word + synonyms.
+3. User checks/unchecks words → clicks **Generate**.
+4. Calls `AgentPipeline.generate_card_batch(selected, inferred_level)` and streams results: each card appears as it arrives.
+5. After all complete: summary panel — list of saved words + any failures.
+
+#### Page 2 — Review (Interactive Session-based Review)
+- Fetches all due cards upfront into `st.session_state`.
+- Shows word prompt → reveal → 0–5 SM-2 rating → advance.
+- End of session: summary + option to start another session.
+
+---
+
+## Design Decisions
+
+| Decision | Choice | Rationale |
+|---|---|---|
+| Level inference timing | Once per batch | Simpler; consistent context for all cards in the batch |
+| Already-in-DB words | Skip silently, status = `"skipped"` | Avoids duplicates without blocking the user |
+| Batch failure handling | Skip failed words, report at end | Partial success is more useful than all-or-nothing |
+| Card streaming | Stream as each arrives | Reduces perceived latency for large batches |
+| Post-generation UX | Summary panel, stay on Add Card page | User may want to add another word immediately |
 
 ---
 
@@ -69,6 +132,7 @@ graph TD
 
 ### Automated Tests
 - Python unit tests (`uv run pytest`) verifying the SM-2 calculations in `RepetitionEngine` and CRUD joins in `CardStore`.
+- Unit tests for `AgentPipeline.generate_card_batch` covering skip, failure, and happy-path status values.
 - ADK-integrated evaluations (`agents-cli eval`) to verify agent language outputs and translation accuracy.
 
 ### Manual Verification
