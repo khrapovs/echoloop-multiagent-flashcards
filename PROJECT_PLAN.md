@@ -137,3 +137,93 @@ graph TD
 
 ### Manual Verification
 - Testing interactive card creation and reviews using the local Streamlit dashboard.
+
+---
+
+## Deployment Architecture (GCP)
+
+To keep the MVP simple, cost-effective, and fully containerized, we target **Google Cloud Run** for hosting both components. Cloud Run scales to zero, minimizing idle running costs.
+
+### Architecture Topology
+
+```mermaid
+graph LR
+    User([User's Browser]) -->|HTTPS: Port 8501| UI[Streamlit UI Container · Cloud Run]
+    UI -->|Local File system / Mount| SQLite[(SQLite Database: echoloop.db)]
+    UI -->|In-Process ADK Engine| Agents[Agent Modules: context_agent & synonyms_agent]
+    Agents -->|gRPC / REST API| Gemini[Gemini Developer API / Vertex AI]
+```
+
+* **Single Consolidated Container Deployment (Streamlit + Agents + DB)**:
+  * Since our current architecture runs the ADK agents in-process via `runner.py` (which configures the SDK and makes calls to Gemini), we do not need to deploy a separate FastAPI agent server for the Streamlit UI to work.
+  * The Streamlit UI container runs as a Cloud Run Service. It executes the Python application, imports the agents locally, and writes directly to `echoloop.db`.
+  * **Persistent Storage**: Cloud Run container filesystems are ephemeral. For the SQLite database (`echoloop.db`) to survive container restarts, we mount a **Cloud Storage bucket** as a network volume using Cloud Run's integrated Cloud Storage volume mounts (configured as a writeable mount at `/data`), and redirect our DB path to `/data/echoloop.db`.
+  * **Vertex AI / Gemini API Integration**: Cloud Run uses its default Service Account (with appropriate IAM roles like `Vertex AI User`) to authenticate calls to Gemini seamlessly via Application Default Credentials (ADC).
+
+---
+
+## Deployment Plan & Steps
+
+### Prerequisites
+1. **Google Cloud SDK (`gcloud`)** installed and authenticated.
+2. An active GCP Project with billing enabled.
+3. Enabled APIs: Cloud Run (`run.googleapis.com`), Artifact Registry (`artifactregistry.googleapis.com`), and Vertex AI (`aiplatform.googleapis.com`).
+
+### Step 1: Create a Cloud Storage Bucket for SQLite Persistence
+Create a GCS bucket to store the SQLite file so it persists across container restarts:
+```bash
+gcloud storage buckets create gs://echoloop-sqlite-store --location=us-east1
+```
+
+### Step 2: Write a Dockerfile
+Create a `Dockerfile` at the root of the project to package the application.
+
+### Step 3: Configure Database Directory Override in Code
+We update `constants.py` to check for the `ECHOLOOP_DB_DIR` environment variable, defaulting to `/data/echoloop.db` when deployed, but fallback to the repository root locally.
+
+### Step 4: Build and Deploy to Google Cloud Run
+Deploy using the inline build capability of Cloud Run (which leverages Cloud Build under the hood):
+```bash
+gcloud run deploy echoloop-ui \
+    --source . \
+    --port 8501 \
+    --region us-east1 \
+    --allow-unauthenticated \
+    --update-env-vars GOOGLE_GENAI_USE_VERTEXAI=True \
+    --add-volume=name=sqlite-volume,type=gcs,bucket=echoloop-sqlite-store \
+    --add-volume-mount=volume=sqlite-volume,mount-path=/data
+```
+
+### Step 5: Verify the Deployed App
+Retrieve the Service URL from the command output and open it in your browser. Verify that words can be added, and that refresh/restarts preserve the database card count.
+
+---
+
+## Security & IP Whitelisting (MVP Access Control)
+
+To ensure the deployed application is only accessible to yourself while maintaining **zero baseline costs** (retaining Cloud Run's scale-to-zero model), we enforce IP whitelisting programmatically directly within the Streamlit UI.
+
+### Programmatic IP Whitelisting in Streamlit (Zero-Cost MVP)
+
+When deployed behind Cloud Run, the client's original IP is forwarded by Google's frontend proxy and is accessible via the `X-Forwarded-For` HTTP header.
+
+#### Implementation Steps:
+1. **Configure Allowed IPs**: Add an environment variable in Cloud Run containing your whitelisted IPs (comma-separated):
+   ```bash
+   --update-env-vars ALLOWED_IPS="YOUR_PUBLIC_IP"
+   ```
+2. **Check IP on App Load**:
+   Add a helper function to inspect headers in `main.py` before loading page elements (call `enforce_ip_access()` in the beginning of the `main.py`)
+
+3. **Deploy with restriction**:
+   Update your Cloud Run deploy command to supply the environment variable:
+   ```bash
+   gcloud run deploy echoloop-ui \
+       --source . \
+       --port 8501 \
+       --region us-east1 \
+       --allow-unauthenticated \
+       --update-env-vars GOOGLE_GENAI_USE_VERTEXAI=True,ALLOWED_IPS="YOUR_PUBLIC_IP" \
+       --add-volume=name=sqlite-volume,type=gcs,bucket=echoloop-sqlite-store \
+       --add-volume-mount=volume=sqlite-volume,mount-path=/data
+   ```

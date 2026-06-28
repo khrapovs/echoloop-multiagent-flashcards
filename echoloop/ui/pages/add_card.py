@@ -13,12 +13,17 @@ from echoloop.pipeline import AgentPipeline, FlashcardResult
 from echoloop.repetition_engine import RepetitionEngine
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card, Example
+from echoloop.ui.auth import enforce_ip_access
 from echoloop.ui.styles import inject_styles
 
 # ---------------------------------------------------------------------------
 # Page config — must be the very first Streamlit call
 # ---------------------------------------------------------------------------
 st.set_page_config(page_title="EchoLoop · Add Card", page_icon="➕", layout="centered")
+
+
+enforce_ip_access()
+
 inject_styles()
 
 

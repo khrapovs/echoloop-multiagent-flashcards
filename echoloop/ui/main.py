@@ -8,13 +8,16 @@ the user to the two pages inside the ``pages/`` folder:
 - **Review**   — interactive spaced-repetition review session.
 """
 
-from __future__ import annotations
-
 import streamlit as st
 
+from echoloop.ui.auth import enforce_ip_access
 from echoloop.ui.styles import inject_styles
 
 st.set_page_config(page_title="EchoLoop", page_icon="🔁", layout="centered")
+
+
+enforce_ip_access()
+
 inject_styles()
 
 st.markdown(
