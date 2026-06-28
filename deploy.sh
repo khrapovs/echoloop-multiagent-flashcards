@@ -7,6 +7,7 @@ set -euo pipefail
 PROJECT_ID="echoloop-500808"
 REGION="europe-west4"
 STATE_BUCKET="echoloop-tf-state"
+source .env
 
 echo "=== 1. Setting target GCP project ==="
 gcloud config set project "${PROJECT_ID}"
