@@ -44,9 +44,9 @@ def enforce_google_sso() -> None:
 
     # 1. User is already authenticated in this session
     if "auth_email" in st.session_state:
-        st.sidebar.markdown(f"👤 **Logged in as:**\n`{st.session_state.auth_email}`")
+        st.sidebar.markdown(f"👤 **Logged in as:**\n`{st.session_state['auth_email']}`")
         if st.sidebar.button("Log out"):
-            del st.session_state.auth_email
+            del st.session_state["auth_email"]
             st.rerun()
         return
 
@@ -91,7 +91,7 @@ def enforce_google_sso() -> None:
 
                 # Verify whitelist access
                 if verify_email_whitelist(email):
-                    st.session_state.auth_email = email
+                    st.session_state["auth_email"] = email
                     # Clear query params to make the URL clean
                     st.query_params.clear()
                     st.success("Login successful!")
