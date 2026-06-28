@@ -1,7 +1,5 @@
 """Authentication and access control utilities for the EchoLoop UI using Google SSO."""
 
-from __future__ import annotations
-
 import os
 import urllib.parse
 
