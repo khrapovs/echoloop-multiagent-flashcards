@@ -21,6 +21,11 @@ dependencies = [
 [project.scripts]
 echoloop = "echoloop.cli:run_ui"
 
+[project.optional-dependencies]
+eval = [
+  "google-adk[eval]>=2.3.0",
+]
+
 [dependency-groups]
 dev = [
   "prek>=0.4.5",
