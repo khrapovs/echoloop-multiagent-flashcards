@@ -3,6 +3,7 @@
 import os
 
 import streamlit as st
+from loguru import logger
 
 
 def verify_ip_access() -> bool:
@@ -21,17 +22,20 @@ def verify_ip_access() -> bool:
     """
     allowed_ips_raw = os.getenv("ALLOWED_IPS")
     if not allowed_ips_raw:
+        logger.debug("No allowed IPs configured, granting access")
         return True
 
     # Extract client IP (first entry in X-Forwarded-For chain)
     headers = st.context.headers
     forwarded_for = headers.get("X-Forwarded-For", "")
     if not forwarded_for:
+        logger.debug("X-Forwarded-For header not found, denying access")
         return False
 
     client_ip = forwarded_for.split(",")[0].strip()
+    logger.debug(f"Client IP: {client_ip}")
     allowed_ips = [ip.strip() for ip in allowed_ips_raw.split(",") if ip.strip()]
-
+    logger.debug(f"Allowed IPs: {allowed_ips}")
     return client_ip in allowed_ips
 
 
