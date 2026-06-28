@@ -1,7 +1,5 @@
 """Unit tests for Google SSO access control (auth.py)."""
 
-from __future__ import annotations
-
 import os
 from collections.abc import Iterator
 from unittest.mock import MagicMock, patch
