@@ -13,6 +13,7 @@ from echoloop.pipeline import AgentPipeline, FlashcardResult
 from echoloop.repetition_engine import RepetitionEngine
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card, Example
+from echoloop.ui.auth import enforce_ip_access
 from echoloop.ui.styles import inject_styles
 
 # ---------------------------------------------------------------------------
@@ -20,7 +21,6 @@ from echoloop.ui.styles import inject_styles
 # ---------------------------------------------------------------------------
 st.set_page_config(page_title="EchoLoop · Add Card", page_icon="➕", layout="centered")
 
-from echoloop.ui.auth import enforce_ip_access  # noqa: E402
 
 enforce_ip_access()
 
