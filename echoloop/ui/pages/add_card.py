@@ -59,8 +59,7 @@ total_cards = len(store.list_cards())
 st.markdown(
     """
     <div class="hero">
-        <h1>🔁 EchoLoop</h1>
-        <p>Add words to your deck</p>
+        <h2>Add words to your deck</h2>
     </div>
     """,
     unsafe_allow_html=True,
