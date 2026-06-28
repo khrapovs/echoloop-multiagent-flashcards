@@ -88,6 +88,6 @@ resource "google_cloud_run_v2_service_iam_member" "allow_public" {
   location = google_cloud_run_v2_service.echoloop_ui.location
   project  = google_cloud_run_v2_service.echoloop_ui.project
   name     = google_cloud_run_v2_service.echoloop_ui.name
-  role     = "roles/run.viewer"
+  role     = "roles/run.invoker"
   member   = "allUsers"
 }
