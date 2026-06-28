@@ -14,3 +14,4 @@ dist/
 *.log
 .terraform.lock.hcl
 artifacts/
+.env
