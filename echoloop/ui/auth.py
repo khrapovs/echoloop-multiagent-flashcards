@@ -6,6 +6,8 @@ import urllib.parse
 import requests
 import streamlit as st
 
+from echoloop.ui.styles import inject_styles
+
 
 def get_redirect_uri() -> str:
     """Construct the redirect URI dynamically based on the request headers."""
@@ -32,6 +34,8 @@ def enforce_google_sso() -> None:
     Checks if the user has an active session. If not, it either handles
     the incoming OAuth2 callback code or displays a Google login button.
     """
+    inject_styles()
+
     client_id = os.getenv("GOOGLE_CLIENT_ID")
     client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
 
