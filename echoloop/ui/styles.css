@@ -1,9 +1,18 @@
 /* ── Global font ─────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
+
+html,
+body,
+[class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
 
 /* ── Hero header ─────────────────────────────────────────────────────────── */
-.hero { text-align: center; padding: 2.5rem 0 1rem; }
+.hero {
+    text-align: center;
+    padding: 2.5rem 0 1rem;
+}
+
 .hero h1 {
     font-size: 3rem;
     font-weight: 700;
@@ -12,23 +21,29 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.25rem;
 }
-.hero p { font-size: 1.05rem; color: #9CA3AF; margin-top: 0; }
+
+.hero p {
+    font-size: 1.05rem;
+    color: #9CA3AF;
+    margin-top: 0;
+}
 
 /* ── Word input box ──────────────────────────────────────────────────────── */
-div[data-testid="stTextInput"] > div > div > input {
+div[data-testid="stTextInput"]>div>div>input {
     font-size: 1.3rem;
     padding: 0.8rem 1.1rem;
     border-radius: 12px;
     border: 2px solid #6C63FF44;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-div[data-testid="stTextInput"] > div > div > input:focus {
+
+div[data-testid="stTextInput"]>div>div>input:focus {
     border-color: #6C63FF;
     box-shadow: 0 0 0 3px #6C63FF22;
 }
 
 /* ── Primary button ──────────────────────────────────────────────────────── */
-div[data-testid="stButton"] > button[kind="primary"] {
+div[data-testid="stButton"]>button[kind="primary"] {
     width: 100%;
     padding: 0.75rem;
     font-size: 1.05rem;
@@ -39,7 +54,8 @@ div[data-testid="stButton"] > button[kind="primary"] {
     color: white;
     transition: opacity 0.15s ease, transform 0.1s ease;
 }
-div[data-testid="stButton"] > button[kind="primary"]:hover {
+
+div[data-testid="stButton"]>button[kind="primary"]:hover {
     opacity: 0.88;
     transform: translateY(-1px);
 }
@@ -54,9 +70,17 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     box-shadow: 0 8px 32px #6C63FF18;
     animation: fadeSlideIn 0.4s ease;
 }
+
 @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Word + translation headline */
@@ -67,8 +91,18 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     flex-wrap: wrap;
     margin-bottom: 0.4rem;
 }
-.fc-word        { font-size: 2.2rem; font-weight: 700; color: #ffffff; }
-.fc-translation { font-size: 1.25rem; color: #9CA3AF; font-style: italic; }
+
+.fc-word {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.fc-translation {
+    font-size: 1.25rem;
+    color: #9CA3AF;
+    font-style: italic;
+}
 
 /* CEFR badge */
 .cefr-badge {
@@ -92,8 +126,18 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     color: #6C63FF;
     margin-bottom: 0.3rem;
 }
-.fc-sentence-de { font-size: 1.1rem; color: #e2e8f0; margin-bottom: 0.15rem; }
-.fc-sentence-en { font-size: 0.95rem; color: #9CA3AF; font-style: italic; }
+
+.fc-sentence-de {
+    font-size: 1.1rem;
+    color: #e2e8f0;
+    margin-bottom: 0.15rem;
+}
+
+.fc-sentence-en {
+    font-size: 0.95rem;
+    color: #9CA3AF;
+    font-style: italic;
+}
 
 /* ── Review page ─────────────────────────────────────────────────────────── */
 
@@ -125,6 +169,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     box-shadow: 0 8px 32px #6C63FF18;
     animation: fadeSlideIn 0.35s ease;
 }
+
 .review-translation {
     font-size: 1.6rem;
     font-weight: 600;
@@ -148,6 +193,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     text-align: center;
     padding: 3rem 1rem;
 }
+
 .session-complete h2 {
     font-size: 2rem;
     font-weight: 700;
@@ -156,7 +202,11 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
 }
-.session-complete p { color: #9CA3AF; font-size: 1.05rem; }
+
+.session-complete p {
+    color: #9CA3AF;
+    font-size: 1.05rem;
+}
 
 /* ── Add Card — synonym checklist ────────────────────────────────────────── */
 
@@ -180,6 +230,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     box-shadow: 0 4px 16px #6C63FF12;
     animation: fadeSlideIn 0.3s ease;
 }
+
 .mini-card-headline {
     display: flex;
     align-items: baseline;
@@ -187,8 +238,18 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     flex-wrap: wrap;
     margin-bottom: 0.3rem;
 }
-.mini-card-word        { font-size: 1.4rem; font-weight: 700; color: #ffffff; }
-.mini-card-translation { font-size: 1rem; color: #9CA3AF; font-style: italic; }
+
+.mini-card-word {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.mini-card-translation {
+    font-size: 1rem;
+    color: #9CA3AF;
+    font-style: italic;
+}
 
 /* ── Add Card — batch summary panel ─────────────────────────────────────── */
 
@@ -199,6 +260,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     padding: 1.4rem 1.8rem;
     margin-top: 1.5rem;
 }
+
 .summary-panel h3 {
     font-size: 1rem;
     font-weight: 700;
@@ -206,6 +268,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     margin-bottom: 0.8rem;
     letter-spacing: 0.04em;
 }
+
 .summary-row {
     display: flex;
     align-items: center;
@@ -226,6 +289,7 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     box-shadow: 0 8px 32px #6C63FF11;
     margin-top: 2rem;
 }
+
 .login-btn {
     display: inline-block;
     background-color: #ffffff;
@@ -234,12 +298,13 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     padding: 0.8rem 1.8rem;
     border-radius: 30px;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s, box-shadow 0.2s;
     margin-top: 1.5rem;
 }
+
 .login-btn:hover {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-    color: #000000;
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+    color: #000000;
 }
