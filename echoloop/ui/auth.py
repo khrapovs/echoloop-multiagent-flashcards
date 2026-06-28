@@ -114,34 +114,6 @@ def enforce_google_sso() -> None:
 
     st.markdown(
         """
-        <style>
-        .login-container {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            background: linear-gradient(145deg, #1e1e2e, #2a2a3e);
-            border: 1.5px solid #6C63FF33;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px #6C63FF11;
-            margin-top: 2rem;
-        }
-        .login-btn {
-            display: inline-block;
-            background-color: #ffffff;
-            color: #1f1f1f;
-            font-weight: 600;
-            padding: 0.8rem 1.8rem;
-            border-radius: 30px;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 1.5rem;
-        }
-        .login-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-            color: #000000;
-        }
-        </style>
         <div class="login-container">
             <h3>🔐 Private Demonstration Service</h3>
             <p style="color:#9CA3AF; font-size:0.95rem;">
