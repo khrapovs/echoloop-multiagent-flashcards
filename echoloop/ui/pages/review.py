@@ -25,6 +25,10 @@ from echoloop.ui.styles import inject_styles
 # ---------------------------------------------------------------------------
 st.set_page_config(page_title="Review", page_icon="🔁", layout="centered")
 
+from echoloop.ui.auth import enforce_ip_access  # noqa: E402
+
+enforce_ip_access()
+
 inject_styles()
 
 

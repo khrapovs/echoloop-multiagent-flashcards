@@ -19,6 +19,11 @@ from echoloop.ui.styles import inject_styles
 # Page config — must be the very first Streamlit call
 # ---------------------------------------------------------------------------
 st.set_page_config(page_title="EchoLoop · Add Card", page_icon="➕", layout="centered")
+
+from echoloop.ui.auth import enforce_ip_access  # noqa: E402
+
+enforce_ip_access()
+
 inject_styles()
 
 
