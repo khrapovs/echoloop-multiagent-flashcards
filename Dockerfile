@@ -8,12 +8,13 @@ RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 # Install uv for fast package management
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy dependency files and install them
+# Copy dependency files and install them (excluding the project itself to allow caching)
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
+RUN uv sync --frozen --no-dev --no-install-project
 
-# Copy application files
+# Copy application files and install the project
 COPY echoloop/ ./echoloop/
+RUN uv sync --frozen --no-dev
 
 # Expose Streamlit port (Cloud Run defaults to 8080)
 EXPOSE 8080
