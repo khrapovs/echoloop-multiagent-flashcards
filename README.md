@@ -70,7 +70,7 @@ graph TD
 ## 💻 Local Setup
 
 ### Prerequisites
-* [Python 3.11+](https://www.python.org/)
+* [Python 3.14+](https://www.python.org/)
 * [uv](https://github.com/astral-sh/uv) (recommended Python package manager)
 
 ### Installation
@@ -109,7 +109,7 @@ EchoLoop uses **Terraform** to deploy a containerized environment to **Google Cl
 3. Authenticate Application Default Credentials (ADC) for Terraform:
    ```bash
    gcloud auth application-default login
-   gcloud auth application-default set-quota-project echoloop-500808
+   gcloud auth application-default set-quota-project <YOUR-PROJECT-ID>
    ```
 
 ### Execution Steps
@@ -133,12 +133,17 @@ To bootstrap infrastructure and deploy the application:
 ## 🧪 Contribution & Development
 
 ### Code Quality (Pre-commits & Linting)
-Before submitting code, ensure that all linting checks pass. The project uses `pre-commit` and `ruff` for code formatting:
+Before submitting code, ensure that all linting checks pass. The project uses `prek` for checking commits:
 
 ```bash
-# Run linting manually
-uv run ruff check .
-uv run ruff format .
+prek install
+```
+
+Run linting manually
+
+```bash
+uv run prek run -v --show-diff-on-failure
+uv run ty check
 ```
 
 ### Running Tests

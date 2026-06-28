@@ -38,9 +38,17 @@ version_provider = "uv"
 update_changelog_on_bump = true
 tag_format = "v$version"
 
+[tool.pytest.ini_options]
+markers = [
+  "e2e: end-to-end tests that require a running server and full Vertex AI credentials (deselect with '-m not e2e')",
+]
+
 [tool.ruff]
 line-length = 120
 src = ["echoloop", "tests"]
+
+[tool.ruff.format]
+preview = true
 
 [tool.ruff.lint]
 select = ["E", "F", "D", "B", "I", "ARG"]
@@ -64,8 +72,3 @@ no-matching-overload = "ignore"
 [tool.uv.build-backend]
 module-root = "."
 module-name = "echoloop"
-
-[tool.pytest.ini_options]
-markers = [
-  "e2e: end-to-end tests that require a running server and full Vertex AI credentials (deselect with '-m not e2e')",
-]
