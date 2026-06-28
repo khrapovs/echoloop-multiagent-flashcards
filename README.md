@@ -82,7 +82,7 @@ graph TD
 
 2. **Install dependencies**:
    ```bash
-   uv sync
+   uv sync --all-extras
    ```
 
 3. **Set API credentials**:
@@ -122,6 +122,22 @@ Make sure the entire test suite passes successfully.
   ```bash
   uv run pytest tests/integration -v
   ```
+
+### Evaluating Agents
+We use the **Google Agent Development Kit (ADK)** evaluation suite to run automated benchmark runs and grade output quality.
+
+1. **Generate traces** (runs the agent against the test cases in `tests/eval/datasets/basic-dataset.json`):
+   ```bash
+   agents-cli eval generate
+   ```
+2. **Grade results** (calculates pass/fail rates on language quality and structured schema compliance):
+   ```bash
+   agents-cli eval grade
+   ```
+3. **Analyze failures** (clusters outputs to find common error domains):
+   ```bash
+   agents-cli eval analyze
+   ```
 
 ---
 

@@ -1,22 +1,55 @@
 {
   "eval_cases": [
     {
-      "eval_case_id": "greeting",
+      "eval_case_id": "word_hund_level_a1",
       "prompt": {
         "parts": [
           {
-            "text": "Hello, what can you help me with?"
+            "text": "Create a flashcard for the German word: 'Hund'. The user's current CEFR level is A1."
           }
         ],
         "role": "user"
       }
     },
     {
-      "eval_case_id": "weather_query",
+      "eval_case_id": "word_entscheidung_level_b2",
       "prompt": {
         "parts": [
           {
-            "text": "What's the weather like in San Francisco?"
+            "text": "Create a flashcard for the German word: 'Entscheidung'. The user's current CEFR level is B2."
+          }
+        ],
+        "role": "user"
+      }
+    },
+    {
+      "eval_case_id": "word_herausforderung_level_b1",
+      "prompt": {
+        "parts": [
+          {
+            "text": "Create a flashcard for the German word: 'Herausforderung'. The user's current CEFR level is B1."
+          }
+        ],
+        "role": "user"
+      }
+    },
+    {
+      "eval_case_id": "word_verantwortung_level_c1",
+      "prompt": {
+        "parts": [
+          {
+            "text": "Create a flashcard for the German word: 'Verantwortung'. The user's current CEFR level is C1."
+          }
+        ],
+        "role": "user"
+      }
+    },
+    {
+      "eval_case_id": "word_katze_level_a2",
+      "prompt": {
+        "parts": [
+          {
+            "text": "Create a flashcard for the German word: 'Katze'. The user's current CEFR level is A2."
           }
         ],
         "role": "user"
