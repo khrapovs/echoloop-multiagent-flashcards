@@ -1,21 +1,25 @@
-FROM python:3.14-slim
+FROM python:3.11-slim
 
-RUN pip install --no-cache-dir uv==0.11.21
+WORKDIR /app
 
-WORKDIR /code
+# Install system dependencies
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-COPY ./pyproject.toml ./README.md ./uv.lock* ./
+# Install uv for fast package management
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY ./src ./src
+# Copy dependency files and install them
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-RUN uv sync --frozen
+# Copy application files
+COPY echoloop/ ./echoloop/
 
-ARG COMMIT_SHA=""
-ENV COMMIT_SHA=${COMMIT_SHA}
-
-ARG AGENT_VERSION=0.0.0
-ENV AGENT_VERSION=${AGENT_VERSION}
-
+# Expose Streamlit port (Cloud Run defaults to 8080)
 EXPOSE 8080
 
-CMD ["uv", "run", "uvicorn", "echoloop.fast_api_app:app", "--host", "0.0.0.0", "--port", "8080"]
+# Environment variables
+ENV PORT=8080
+
+# Run the UI app on port 8080
+CMD ["uv", "run", "streamlit", "run", "echoloop/ui/main.py", "--server.port=8080", "--server.address=0.0.0.0"]
