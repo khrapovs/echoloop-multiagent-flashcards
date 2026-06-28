@@ -199,31 +199,52 @@ Retrieve the Service URL from the command output and open it in your browser. Ve
 
 ---
 
-## Security & IP Whitelisting (MVP Access Control)
+## Security & Google SSO (MVP Access Control)
 
-To ensure the deployed application is only accessible to yourself while maintaining **zero baseline costs** (retaining Cloud Run's scale-to-zero model), we enforce IP whitelisting programmatically directly within the Streamlit UI.
+To ensure the deployed application is only accessible to authorized individuals while maintaining **zero baseline costs** (retaining Cloud Run's scale-to-zero model), we enforce Google Single Sign-On (SSO) authentication programmatically inside the Streamlit UI with an email whitelist.
 
-### Programmatic IP Whitelisting in Streamlit (Zero-Cost MVP)
+```mermaid
+sequenceDiagram
+    actor User as User's Browser
+    participant App as Streamlit UI (Cloud Run)
+    participant Google as Google OAuth2 Server
 
-When deployed behind Cloud Run, the client's original IP is forwarded by Google's frontend proxy and is accessible via the `X-Forwarded-For` HTTP header.
+    User->>App: 1. Request main page
+    alt session has authorized user
+        App->>User: Render normal pages
+    else session unauthorized
+        App->>User: Render "Sign in with Google" button
+        User->>App: 2. Click Sign In
+        App->>Google: 3. Redirect to Auth consent screen
+        Google->>User: Render login & consent page
+        User->>Google: Authenticate
+        Google->>App: 4. Redirect with auth code
+        App->>Google: 5. Exchange code for access token & userinfo
+        Google->>App: Return userinfo (email)
+        alt email in ALLOWED_EMAILS list
+            App->>User: 6. Save email in session_state, render normal pages
+        else email NOT in ALLOWED_EMAILS list
+            App->>User: Render "Access Denied: Email not whitelisted"
+        end
+    end
+```
 
-#### Implementation Steps:
-1. **Configure Allowed IPs**: Add an environment variable in Cloud Run containing your whitelisted IPs (comma-separated):
+### Configuration & Deployment Steps:
+
+1. **Configure Google Cloud Console OAuth**:
+   * Go to APIs & Services > OAuth Consent Screen. Set User Type to **External**, add your email addresses under **Test users**.
+   * Go to Credentials > Create Credentials > **OAuth Client ID**.
+   * Set Application type to **Web application**.
+   * Add Authorized redirect URIs:
+     * Local: `http://localhost:8501/`
+     * Production: `https://echoloop-ui-xxxxxx.a.run.app/` (your Cloud Run URL)
+   * Save and copy the **Client ID** and **Client Secret**.
+
+2. **Supply environment variables to Cloud Run**:
+   Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `ALLOWED_EMAILS` (comma-separated):
    ```bash
-   --update-env-vars ALLOWED_IPS="YOUR_PUBLIC_IP"
+   --update-env-vars GOOGLE_CLIENT_ID="xxx.apps.googleusercontent.com",GOOGLE_CLIENT_SECRET="xxx",ALLOWED_EMAILS="user1@gmail.com,user2@gmail.com"
    ```
-2. **Check IP on App Load**:
-   Add a helper function to inspect headers in `main.py` before loading page elements (call `enforce_ip_access()` in the beginning of the `main.py`)
 
-3. **Deploy with restriction**:
-   Update your Cloud Run deploy command to supply the environment variable:
-   ```bash
-   gcloud run deploy echoloop-ui \
-       --source . \
-       --port 8501 \
-       --region europe-west4 \
-       --allow-unauthenticated \
-       --update-env-vars GOOGLE_GENAI_USE_VERTEXAI=True,ALLOWED_IPS="YOUR_PUBLIC_IP" \
-       --add-volume=name=sqlite-volume,type=gcs,bucket=echoloop-sqlite-store \
-       --add-volume-mount=volume=sqlite-volume,mount-path=/data
-   ```
+3. **Check authentication on App Load**:
+   Add a helper function to inspect `st.session_state` and redirect to Google OAuth if not authenticated.

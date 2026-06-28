@@ -52,8 +52,18 @@ resource "google_cloud_run_v2_service" "echoloop_ui" {
       }
 
       env {
-        name  = "ALLOWED_IPS"
-        value = var.allowed_ips
+        name  = "GOOGLE_CLIENT_ID"
+        value = var.google_client_id
+      }
+
+      env {
+        name  = "GOOGLE_CLIENT_SECRET"
+        value = var.google_client_secret
+      }
+
+      env {
+        name  = "ALLOWED_EMAILS"
+        value = var.allowed_emails
       }
 
       volume_mounts {

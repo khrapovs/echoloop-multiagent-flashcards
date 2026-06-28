@@ -14,7 +14,7 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 * **Synonym Verification Checklist**: Allows you to check/uncheck generated synonyms before batch-generating flashcards.
 * **Spaced Repetition Scheduler**: Employs the **SuperMemo-2 (SM-2)** scheduling algorithm (calculating Easiness Factor, repetitions, and intervals) to queue cards due for review.
 * **Interactive Session-based Review**: Flip cards to see answers, rate your recall from 0 to 5, and dynamically save metrics.
-* **Zero-Cost Secure Deployment**: Deploys to Google Cloud Run with GCS volume persistence and programmatic IP whitelisting to guarantee private access with $0.00 idle running costs.
+* **Zero-Cost Secure Deployment**: Deploys to Google Cloud Run with GCS volume persistence and programmatic Google SSO (OAuth2) with email whitelisting to guarantee private access with $0.00 idle running costs.
 
 ---
 
@@ -157,15 +157,22 @@ EchoLoop uses **Terraform** to deploy a containerized environment to **Google Cl
 ### Execution Steps
 To bootstrap infrastructure and deploy the application:
 
-1. **Run the deployment orchestrator script**:
+1. **Configure deployment variables**:
+   Copy the example environment configuration file and fill in your variables (GCP project, state bucket, and Google OAuth Client ID/Secret):
+   ```bash
+   cp .env-example .env
+   # Open .env in your editor and configure the variables
+   ```
+
+2. **Run the deployment orchestrator script**:
    ```bash
    ./deploy.sh
    ```
-   *This script fetches your current public IP, bootstraps the GCS state bucket, builds the image via Cloud Build, and applies the Terraform configuration.*
+   *This script reads configurations from your `.env` file, validates credentials, bootstraps the GCS state bucket, builds the container via Cloud Build, and deploys to Cloud Run.*
 
-2. **Access your service**:
+3. **Access your service**:
    The script outputs your Cloud Run Service URL:
    ```
    Your EchoLoop UI is accessible at: https://echoloop-ui-xxxxxx.a.run.app
    ```
-   *Only requests coming from your whitelisted IP address will be allowed to render pages.*
+   *Only users logging in with whitelisted email addresses will be granted access to the application.*
