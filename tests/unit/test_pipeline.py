@@ -4,8 +4,6 @@ All agent calls are mocked so no network or LLM access is needed.
 The CardStore uses an in-memory SQLite database for isolation.
 """
 
-from __future__ import annotations
-
 import datetime
 from unittest.mock import patch
 
@@ -16,6 +14,7 @@ from echoloop.pipeline import AgentPipeline, FlashcardResult
 from echoloop.repetition_engine import RepetitionEngine
 from echoloop.storage.adapter import CardStore
 from echoloop.storage.models import Card
+from echoloop.types import CEFR_LEVELS_TYPE
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -40,7 +39,7 @@ def pipeline(store: CardStore, engine: RepetitionEngine) -> AgentPipeline:
     return AgentPipeline(store=store, engine=engine)
 
 
-def _make_flashcard(word: str = "Hund", level: str = "A1") -> FlashcardContext:
+def _make_flashcard(word: str = "Hund", level: CEFR_LEVELS_TYPE = "A1") -> FlashcardContext:
     """Return a minimal FlashcardContext for a given word."""
     return FlashcardContext(
         word=word,
@@ -182,6 +181,7 @@ class TestGenerateCardBatchFailed:
     def test_error_message_is_captured(self, pipeline: AgentPipeline) -> None:
         with patch("echoloop.pipeline.run_context_agent", side_effect=RuntimeError("timeout")):
             results = list(pipeline.generate_card_batch(["Hund"]))
+        assert results[0].error is not None
         assert "timeout" in results[0].error
 
     def test_failed_card_is_none(self, pipeline: AgentPipeline) -> None:
