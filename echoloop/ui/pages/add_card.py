@@ -7,8 +7,6 @@ Phase 2  (select)  — SynonymsAgent runs; user checks/unchecks candidate words.
 Phase 3  (results) — AgentPipeline generates cards one-by-one; summary shown.
 """
 
-from __future__ import annotations
-
 import streamlit as st
 from echoloop.constants import _DB_PATH
 from echoloop.pipeline import AgentPipeline, FlashcardResult
