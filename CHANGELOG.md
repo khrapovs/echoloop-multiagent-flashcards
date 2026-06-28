@@ -1,3 +1,9 @@
+## v0.12.0 (2026-06-28)
+
+### Feat
+
+- Deployment plan. Add IP filter for access control. (#19)
+
 ## v0.11.0 (2026-06-28)
 
 ### Feat
