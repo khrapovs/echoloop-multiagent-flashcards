@@ -151,7 +151,7 @@ EchoLoop uses **Terraform** to deploy a containerized environment to **Google Cl
 3. Authenticate Application Default Credentials (ADC) for Terraform:
    ```bash
    gcloud auth application-default login
-   gcloud auth application-default set-quota-project echoloop-500808
+   gcloud auth application-default set-quota-project <YOUR-PROJECT-ID>
    ```
 
 ### Execution Steps
