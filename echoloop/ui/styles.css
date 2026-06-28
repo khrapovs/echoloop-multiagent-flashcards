@@ -157,3 +157,60 @@ div[data-testid="stButton"] > button[kind="primary"]:hover {
     margin-bottom: 0.5rem;
 }
 .session-complete p { color: #9CA3AF; font-size: 1.05rem; }
+
+/* ── Add Card — synonym checklist ────────────────────────────────────────── */
+
+.synonym-header {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6C63FF;
+    margin-bottom: 0.6rem;
+}
+
+/* ── Add Card — compact streaming card ───────────────────────────────────── */
+
+.mini-card {
+    background: linear-gradient(145deg, #1e1e2e, #2a2a3e);
+    border: 1.5px solid #6C63FF44;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 4px 16px #6C63FF12;
+    animation: fadeSlideIn 0.3s ease;
+}
+.mini-card-headline {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+}
+.mini-card-word        { font-size: 1.4rem; font-weight: 700; color: #ffffff; }
+.mini-card-translation { font-size: 1rem; color: #9CA3AF; font-style: italic; }
+
+/* ── Add Card — batch summary panel ─────────────────────────────────────── */
+
+.summary-panel {
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    border: 1.5px solid #6C63FF33;
+    border-radius: 16px;
+    padding: 1.4rem 1.8rem;
+    margin-top: 1.5rem;
+}
+.summary-panel h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+}
+.summary-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    color: #d1d5db;
+}
