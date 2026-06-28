@@ -1,7 +1,7 @@
 name: "echoloop"
 acli_version: "0.5.0"
 agent_directory: "echoloop"
-region: "us-east1"
+region: "europe-west4"
 base_template: "local_echoloop-multiagent-flashcards"
 generated_at: "2026-06-21T11:08:18.807527+00:00"
 language: "python"

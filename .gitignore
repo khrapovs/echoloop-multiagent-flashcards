@@ -9,3 +9,7 @@ __pycache__/
 dist/
 *.db
 .adk/
+.terraform/
+*.tfstate
+*.log
+.terraform.lock.hcl
