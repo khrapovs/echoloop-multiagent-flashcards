@@ -9,22 +9,67 @@ from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 
-from echoloop.agents.root_agent import FlashcardContext, root_agent
+from echoloop.agents.context_agent import FlashcardContext, context_agent
+from echoloop.agents.synonyms_agent import SynonymsOutput, synonyms_agent
 from echoloop.config import configure_genai
+from echoloop.types import CEFR_LEVELS_TYPE
 
 # Configure GenAI credentials once at the application boundary.
 # Agent modules are pure definitions and do not call configure_genai() themselves.
 configure_genai()
 
 
-def run_context_agent(word: str) -> FlashcardContext:
-    """Run the context agent for ``word`` and return a parsed FlashcardContext.
+def _run_agent(agent, message_text: str, output_key: str, app_name: str) -> dict:
+    """Run *agent* with *message_text* and return the session state dict.
+
+    Shared boilerplate: creates a fresh in-memory session, runs the agent to
+    completion, and returns the session state so callers can extract the
+    structured output they need.
+
+    Args:
+        agent:        An ADK :class:`~google.adk.agents.Agent` instance.
+        message_text: The user message to send.
+        output_key:   Session-state key expected to hold the agent's output.
+        app_name:     Application name tag used by the session service.
+
+    Returns:
+        The session ``state`` dict after the agent run.
+
+    Raises:
+        RuntimeError: If the expected *output_key* is absent from state.
+
+    """
+    session_service = InMemorySessionService()
+    session = session_service.create_session_sync(user_id="runner_user", app_name=app_name)
+    runner = Runner(agent=agent, session_service=session_service, app_name=app_name)
+
+    message = types.Content(role="user", parts=[types.Part.from_text(text=message_text)])
+    list(
+        runner.run(
+            new_message=message,
+            user_id="runner_user",
+            session_id=session.id,
+            run_config=RunConfig(streaming_mode=StreamingMode.NONE),
+        )
+    )
+
+    updated = session_service.get_session_sync(app_name=app_name, user_id="runner_user", session_id=session.id)
+    if updated is None or output_key not in updated.state:
+        raise RuntimeError(f"Agent did not return '{output_key}' in session state.")
+    return updated.state
+
+
+def run_context_agent(word: str, inferred_level: CEFR_LEVELS_TYPE = "A1") -> FlashcardContext:
+    """Run the context agent for *word* and return a parsed :class:`FlashcardContext`.
 
     Creates a fresh in-memory session for each call so the UI remains
     stateless between submissions.
 
     Args:
-        word: A German vocabulary word to generate a flashcard for.
+        word:            A German vocabulary word to generate a flashcard for.
+        inferred_level:  The user's current CEFR level (default ``"A1"``).
+                         Included in the prompt so the agent tailors the
+                         example sentence to the appropriate difficulty.
 
     Returns:
         A populated :class:`FlashcardContext` instance.
@@ -34,27 +79,27 @@ def run_context_agent(word: str) -> FlashcardContext:
             key in the session state.
 
     """
-    session_service = InMemorySessionService()
-    session = session_service.create_session_sync(user_id="ui_user", app_name="echoloop")
+    prompt = f"Create a flashcard for the German word: '{word}'. The user's current CEFR level is {inferred_level}."
+    state = _run_agent(context_agent, prompt, output_key="flashcard_context", app_name="echoloop")
+    return FlashcardContext(**state["flashcard_context"])
 
-    runner = Runner(agent=root_agent, session_service=session_service, app_name="echoloop")
 
-    message = types.Content(
-        role="user",
-        parts=[types.Part.from_text(text=f"Create a flashcard for the German word: '{word}'")],
-    )
+def run_synonyms_agent(word: str) -> SynonymsOutput:
+    """Run the synonyms agent for *word* and return a parsed :class:`SynonymsOutput`.
 
-    list(
-        runner.run(
-            new_message=message,
-            user_id="ui_user",
-            session_id=session.id,
-            run_config=RunConfig(streaming_mode=StreamingMode.NONE),
-        )
-    )
+    Creates a fresh in-memory session for each call.
 
-    updated = session_service.get_session_sync(app_name="echoloop", user_id="ui_user", session_id=session.id)
-    if updated is None or "flashcard_context" not in updated.state:
-        raise RuntimeError("Agent did not return a flashcard_context in session state.")
+    Args:
+        word: A German vocabulary word.
 
-    return FlashcardContext(**updated.state["flashcard_context"])
+    Returns:
+        A populated :class:`SynonymsOutput` instance with up to 5 synonyms.
+
+    Raises:
+        RuntimeError: If the agent does not produce a ``synonyms_output``
+            key in the session state.
+
+    """
+    prompt = f"Find synonyms for the German word: '{word}'"
+    state = _run_agent(synonyms_agent, prompt, output_key="synonyms_output", app_name="echoloop_synonyms")
+    return SynonymsOutput(**state["synonyms_output"])

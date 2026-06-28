@@ -78,20 +78,6 @@ def _init_session() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Hero header
-# ---------------------------------------------------------------------------
-st.markdown(
-    """
-    <div class="hero">
-        <h1>🔁 EchoLoop</h1>
-        <p>Review your cards — one word at a time</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-st.divider()
-
-# ---------------------------------------------------------------------------
 # Initialise (or restart) the session
 # ---------------------------------------------------------------------------
 if "review_queue" not in st.session_state:
