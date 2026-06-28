@@ -82,7 +82,7 @@ graph TD
 
 2. **Install dependencies**:
    ```bash
-   uv sync
+   uv sync --all-extras
    ```
 
 3. **Set API credentials**:
@@ -126,19 +126,15 @@ Make sure the entire test suite passes successfully.
 ### Evaluating Agents
 We use the **Google Agent Development Kit (ADK)** evaluation suite to run automated benchmark runs and grade output quality.
 
-1. **Install evaluation extras**:
-   ```bash
-   uv sync --all-extras
-   ```
-2. **Generate traces** (runs the agent against the test cases in `tests/eval/datasets/basic-dataset.json`):
+1. **Generate traces** (runs the agent against the test cases in `tests/eval/datasets/basic-dataset.json`):
    ```bash
    agents-cli eval generate
    ```
-3. **Grade results** (calculates pass/fail rates on language quality and structured schema compliance):
+2. **Grade results** (calculates pass/fail rates on language quality and structured schema compliance):
    ```bash
    agents-cli eval grade
    ```
-4. **Analyze failures** (clusters outputs to find common error domains):
+3. **Analyze failures** (clusters outputs to find common error domains):
    ```bash
    agents-cli eval analyze
    ```
