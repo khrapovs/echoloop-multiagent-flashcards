@@ -4,7 +4,13 @@ set -euo pipefail
 # EchoLoop Deployment Orchestrator
 # Builds container remotely via Cloud Build and deploys Cloud Run via Terraform.
 
-source .env
+if [ -f .env ]; then
+    source .env
+else
+    echo "Error: .env file not found."
+    echo "Please copy .env-example to .env and configure your variables before deploying."
+    exit 1
+fi
 
 echo "=== 1. Setting target GCP project ==="
 gcloud config set project "${PROJECT_ID}"

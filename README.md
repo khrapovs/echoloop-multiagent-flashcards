@@ -151,25 +151,24 @@ EchoLoop uses **Terraform** to deploy a containerized environment to **Google Cl
 3. Authenticate Application Default Credentials (ADC) for Terraform:
    ```bash
    gcloud auth application-default login
-   gcloud auth application-default set-quota-project <YOUR-PROJECT-ID>
+   gcloud auth application-default set-quota-project echoloop-500808
    ```
 
 ### Execution Steps
 To bootstrap infrastructure and deploy the application:
 
-1. **Configure local environment variables**:
-   Generate an OAuth 2.0 Web Client ID in the GCP Console and set these in your shell:
+1. **Configure deployment variables**:
+   Copy the example environment configuration file and fill in your variables (GCP project, state bucket, and Google OAuth Client ID/Secret):
    ```bash
-   export GOOGLE_CLIENT_ID="your-client-id-here.apps.googleusercontent.com"
-   export GOOGLE_CLIENT_SECRET="your-client-secret-here"
-   export ALLOWED_EMAILS="your-email@gmail.com,friend@gmail.com"
+   cp .env-example .env
+   # Open .env in your editor and configure the variables
    ```
 
 2. **Run the deployment orchestrator script**:
    ```bash
    ./deploy.sh
    ```
-   *This script validates your credentials, bootstraps the GCS state bucket, builds the container via Cloud Build, and deploys to Cloud Run with environment overrides.*
+   *This script reads configurations from your `.env` file, validates credentials, bootstraps the GCS state bucket, builds the container via Cloud Build, and deploys to Cloud Run.*
 
 3. **Access your service**:
    The script outputs your Cloud Run Service URL:
