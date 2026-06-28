@@ -7,7 +7,7 @@ terraform {
     }
   }
   backend "gcs" {
-    bucket = "echoloop-tf-state-500808"
+    bucket = "echoloop-tf-state"
     prefix = "terraform/state"
   }
 }

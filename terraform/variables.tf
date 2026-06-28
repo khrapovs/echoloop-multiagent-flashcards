@@ -7,7 +7,7 @@ variable "project_id" {
 variable "region" {
   type        = string
   description = "The GCP region to deploy resources in."
-  default     = "us-east1"
+  default     = "europe-west4"
 }
 
 variable "allowed_ips" {

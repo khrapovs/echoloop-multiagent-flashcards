@@ -172,7 +172,7 @@ graph LR
 ### Step 1: Create a Cloud Storage Bucket for SQLite Persistence
 Create a GCS bucket to store the SQLite file so it persists across container restarts:
 ```bash
-gcloud storage buckets create gs://echoloop-sqlite-store --location=us-east1
+gcloud storage buckets create gs://echoloop-sqlite-store --location=europe-west4
 ```
 
 ### Step 2: Write a Dockerfile
@@ -187,7 +187,7 @@ Deploy using the inline build capability of Cloud Run (which leverages Cloud Bui
 gcloud run deploy echoloop-ui \
     --source . \
     --port 8501 \
-    --region us-east1 \
+    --region europe-west4 \
     --allow-unauthenticated \
     --update-env-vars GOOGLE_GENAI_USE_VERTEXAI=True \
     --add-volume=name=sqlite-volume,type=gcs,bucket=echoloop-sqlite-store \
@@ -221,7 +221,7 @@ When deployed behind Cloud Run, the client's original IP is forwarded by Google'
    gcloud run deploy echoloop-ui \
        --source . \
        --port 8501 \
-       --region us-east1 \
+       --region europe-west4 \
        --allow-unauthenticated \
        --update-env-vars GOOGLE_GENAI_USE_VERTEXAI=True,ALLOWED_IPS="YOUR_PUBLIC_IP" \
        --add-volume=name=sqlite-volume,type=gcs,bucket=echoloop-sqlite-store \
