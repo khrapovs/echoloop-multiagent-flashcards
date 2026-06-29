@@ -18,7 +18,7 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 
 ---
 
-## ⚡ EchoLoop vs. Alternatives (Unique Selling Point)
+## ⚡ EchoLoop vs. Alternatives
 
 EchoLoop occupies a unique space, combining the robust scheduling of Anki with generative AI and interactive user verification.
 
