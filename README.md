@@ -18,6 +18,22 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 
 ---
 
+## ⚡ EchoLoop vs. Alternatives (Unique Selling Point)
+
+EchoLoop occupies a unique space, combining the robust scheduling of Anki with generative AI and interactive user verification.
+
+| Dimension | Duolingo | Anki | Lingvist | **EchoLoop 🔁** |
+| :--- | :--- | :--- | :--- | :--- |
+| **Card Generation** | Static database | Manual creation | Static database | **Dynamic (Multi-Agent Pipeline)** |
+| **Vocabulary Source** | Fixed curriculum | User-supplied | Fixed curriculum | **User-supplied (any custom word)** |
+| **Recall Context** | Repetitive phrases | Plain text | Cloze sentences | **Custom Level-Targeted Sentences** |
+| **Expansion Flow** | None | Manual search | None | **Interactive Synonym Checklist** |
+| **Infrastructure Cost** | Ad-supported/Paid | Free | Subscription | **Zero ($0.00 scale-to-zero GCP)** |
+
+* **The EchoLoop Advantage**: Standard flashcard apps force you into pre-made paths or demand tedious manual editing. EchoLoop lets you input *any* word you encounter, utilizes the **Synonyms Agent** to suggest vocabulary cluster expansions, lets you filter them, and delegates to the **Context Agent** to immediately write level-tailored study material.
+
+---
+
 ## 🏗 System Architecture
 
 ```mermaid
