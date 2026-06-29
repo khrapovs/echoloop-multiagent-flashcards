@@ -30,7 +30,7 @@ EchoLoop occupies a unique space, combining the robust scheduling of Anki with g
 | **Expansion Flow** | None | Manual search | None | **Interactive Synonym Checklist** |
 | **Infrastructure Cost** | Ad-supported/Paid | Free | Subscription | **Zero ($0.00 scale-to-zero GCP)** |
 
-* **The EchoLoop Advantage**: Standard flashcard apps force you into pre-made paths or demand tedious manual editing. EchoLoop lets you input *any* word you encounter, utilizes the **Synonyms Agent** to suggest vocabulary cluster expansions, lets you filter them, and delegates to the **Context Agent** to immediately write level-tailored study material.
+**The EchoLoop Advantage**: Standard flashcard apps force you into pre-made paths or demand tedious manual editing. EchoLoop lets you input *any* word you encounter, utilizes the **Synonyms Agent** to suggest vocabulary cluster expansions, lets you filter them, and delegates to the **Context Agent** to immediately write level-tailored study material.
 
 ---
 
