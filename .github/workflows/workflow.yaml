@@ -72,7 +72,7 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
       - name: Run pre-commit
-        run: uv run prek run -v --show-diff-on-failure
+        run: uv run prek run -v --show-diff-on-failure --all-files
 
   publish:
     name: Build and publish wheels

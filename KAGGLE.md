@@ -105,7 +105,7 @@ Video contents:
 
 This is where you'll be evaluated on the "how" of your project. This includes the quality of your code, technical design, and AI integration.
 
-| Criteria (points) | Description | 
+| Criteria (points) | Description |
 | --- | --- |
 | Technical Implementation (50 points) | For this criteria, we will assess the quality of your solution's architecture, and your code, and the meaningful use of agents in your solution. We will also be looking at your tool use, especially clever usage of existing toolsets. Your code should contain comments pertinent to implementation, design and behaviors. Participants are not required to deploy their agents to a live public endpoint for judging purposes; however, if you do deploy, please provide documentation to reproduce the deployment. 🚨REMINDER: DO NOT INCLUDE ANY API KEYS OR PASSWORDS IN YOUR CODE. |
 | Documenta tion (20 points) | Your submission (when submitting via GitHub) should contain a README.md file explaining the problem, solution, architecture, instructions for setup, and relevant diagrams or images where appropriate. |

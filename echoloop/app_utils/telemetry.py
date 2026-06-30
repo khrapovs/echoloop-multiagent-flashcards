@@ -1,10 +1,10 @@
-from loguru import logger
 import os
+
+from loguru import logger
 
 
 def setup_telemetry() -> str | None:
     """Configure OpenTelemetry and GenAI telemetry with GCS upload."""
-
     bucket = os.environ.get("LOGS_BUCKET_NAME")
     capture_content = os.environ.get("OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT", "false")
     if bucket and capture_content != "false":
@@ -19,7 +19,9 @@ def setup_telemetry() -> str | None:
         os.environ.setdefault("OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH", f"gs://{bucket}/{path}")
     else:
         logger.info(
-            "Prompt-response logging disabled (set LOGS_BUCKET_NAME=gs://your-bucket and OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT to enable)"
+            "Prompt-response logging disabled "
+            "(set LOGS_BUCKET_NAME=gs://your-bucket "
+            "and OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=NO_CONTENT to enable)"
         )
 
     return bucket
