@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from echoloop.agents.mcp_server import mcp
+from mcp.types import TextContent
 
 
 @pytest.mark.anyio()
@@ -31,9 +32,6 @@ async def test_mcp_tool_execution() -> None:
         assert isinstance(result, tuple)
         content_list = result[0]
         assert isinstance(content_list, list)
-
-        # Verify first block is TextContent
-        from mcp.types import TextContent
 
         text_block = content_list[0]
         assert isinstance(text_block, TextContent)
