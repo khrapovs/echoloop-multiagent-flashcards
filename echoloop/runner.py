@@ -80,8 +80,19 @@ def run_context_agent(word: str, inferred_level: CEFR_LEVELS_TYPE = "A1") -> Fla
 
     """
     prompt = f"Create a flashcard for the German word: '{word}'. The user's current CEFR level is {inferred_level}."
-    state = _run_agent(context_agent, prompt, output_key="flashcard_context", app_name="echoloop")
-    return FlashcardContext(**state["flashcard_context"])
+    state = _run_agent(context_agent, prompt, output_key="flashcard_context_raw", app_name="echoloop")
+
+    import json
+    import re
+
+    raw_response = state["flashcard_context_raw"]
+    # Extract JSON content from the raw string block
+    json_match = re.search(r"\{.*\}", raw_response, re.DOTALL)
+    if not json_match:
+        raise RuntimeError(f"Agent response did not contain a valid JSON block: {raw_response}")
+
+    card_data = json.loads(json_match.group(0))
+    return FlashcardContext(**card_data)
 
 
 def run_synonyms_agent(word: str) -> SynonymsOutput:
