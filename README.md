@@ -11,6 +11,7 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 * **Multi-Agent Generation Pipeline**:
   * **Synonyms Agent**: Suggests up to 5 lexicographically matching German synonyms.
   * **Context Agent**: Analyzes selected words, infers target translation, estimates CEFR difficulty levels, and writes contextual German-English example sentences appropriate for the user's estimated level.
+* **Model Context Protocol (MCP) Integration**: Binds a local FastMCP server (`lookup_german_word` tool) to the `ContextAgent` to fetch verified definitions and grammatical genders from the Wiktionary API, eliminating translation hallucinations.
 * **Synonym Verification Checklist**: Allows you to check/uncheck generated synonyms before batch-generating flashcards.
 * **Spaced Repetition Scheduler**: Employs the **SuperMemo-2 (SM-2)** scheduling algorithm (calculating Easiness Factor, repetitions, and intervals) to queue cards due for review.
 * **Interactive Session-based Review**: Flip cards to see answers, rate your recall from 0 to 5, and dynamically save metrics.
@@ -28,6 +29,7 @@ EchoLoop occupies a unique space, combining the robust scheduling of Anki with g
 | **Vocabulary Source** | Fixed curriculum | User-supplied | Fixed curriculum | **User-supplied (any custom word)** |
 | **Recall Context** | Repetitive phrases | Plain text | Cloze sentences | **Custom Level-Targeted Sentences** |
 | **Expansion Flow** | None | Manual search | None | **Interactive Synonym Checklist** |
+| **External Verifier** | None | None | None | **Wiktionary API via MCP Tool** |
 | **Infrastructure Cost** | Ad-supported/Paid | Free | Subscription | **Zero ($0.00 scale-to-zero GCP)** |
 
 **The EchoLoop Advantage**: Standard flashcard apps force you into pre-made paths or demand tedious manual editing. EchoLoop lets you input *any* word you encounter, utilizes the **Synonyms Agent** to suggest vocabulary cluster expansions, lets you filter them, and delegates to the **Context Agent** to immediately write level-tailored study material.
@@ -47,6 +49,8 @@ graph TD
 
     subgraph AgentPipeline [ADK Agent Generation Pipeline — per selected word]
         Pipeline -->|5. For each word| ContextAgent[Context & Difficulty Agent]
+        ContextAgent -->|5a. Fetch definition & gender| MCPServer[MCP Dictionary Server]
+        MCPServer -->|5b. Query API| Wiktionary[(Wiktionary API)]
     end
 
     ContextAgent -->|6a. Stream card to UI| Client
@@ -64,7 +68,10 @@ graph TD
 .
 ├── .agents/                 # Customization rules and agent skills
 ├── echoloop/                # Main application package
-│   ├── agents/              # ADK Agent definitions (context, synonyms)
+│   ├── agents/              # ADK Agent definitions & MCP Server
+│   │   ├── context_agent.py  # Context generation agent (calls MCP tool)
+│   │   ├── synonyms_agent.py # Synonym generation agent
+│   │   └── mcp_server.py     # Local Stdio FastMCP Dictionary Server
 │   ├── app_utils/           # Telemetry and type specifications
 │   ├── ui/                  # Streamlit Multi-page UI package
 │   │   ├── pages/           # Pages (Add Card, Review)
@@ -73,7 +80,9 @@ graph TD
 │   ├── cli.py               # CLI runner entry point
 │   ├── pipeline.py          # Multi-agent orchestrator (AgentPipeline)
 │   ├── repetition_engine.py # SM-2 Scheduler & CEFR level estimator
-│   └── storage/             # SQLite connection and models
+│   └── storage/             # SQLite connection, models, & APIs
+│       ├── adapter.py        # Database CardStore CRUD operations
+│       └── dictionary.py     # Wiktionary HTTP API client
 ├── terraform/               # Infrastructure as Code (GCP)
 ├── tests/                   # Test suite (unit & integration)
 ├── Dockerfile               # Production container definition
