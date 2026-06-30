@@ -1,7 +1,5 @@
 """Unit tests for the OnlineDictionary Wiktionary client."""
 
-from __future__ import annotations
-
 from unittest.mock import MagicMock, patch
 
 from echoloop.storage.dictionary import OnlineDictionary

@@ -1,7 +1,5 @@
 """Model Context Protocol (MCP) server exposing Wiktionary dictionary lookup tools."""
 
-from __future__ import annotations
-
 import json
 
 from mcp.server.fastmcp import FastMCP

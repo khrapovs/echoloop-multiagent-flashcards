@@ -1,7 +1,5 @@
 """Online Wiktionary API client for resolving definitions and grammatical genders."""
 
-from __future__ import annotations
-
 import re
 from typing import Any
 

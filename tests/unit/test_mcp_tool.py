@@ -1,7 +1,5 @@
 """Unit tests for the FastMCP dictionary server."""
 
-from __future__ import annotations
-
 import json
 from unittest.mock import MagicMock, patch
 

@@ -1,7 +1,5 @@
 """Context agent for generating flashcard sentences and difficulty levels, using Wiktionary MCP tools."""
 
-from __future__ import annotations
-
 from google.adk.agents import Agent
 from google.adk.models import Gemini
 from google.adk.tools.mcp_tool import McpToolset
