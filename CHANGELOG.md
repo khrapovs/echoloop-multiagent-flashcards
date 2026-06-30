@@ -1,3 +1,9 @@
+## v0.15.0 (2026-06-30)
+
+### Feat
+
+- Implement dictionary MCP to reduce LLM hallucinations (#25)
+
 ## v0.14.0 (2026-06-28)
 
 ### Feat
