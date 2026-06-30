@@ -54,6 +54,8 @@ graph TD
 
     subgraph AgentPipeline [ADK Agent Generation Pipeline — per selected word]
         Pipeline -->|5. For each word| ContextAgent[Context & Difficulty Agent]
+        ContextAgent -->|5a. Fetch definition & gender| MCP[MCP Dictionary Server]
+        MCP -->|5b. JSON HTTP GET| Wiktionary[(Wiktionary API)]
         ContextAgent -..->|Future Extension| ImageAgent[Image Illustration Agent]
     end
 
@@ -71,7 +73,7 @@ graph TD
 ### 1. Agentic Generation Pipeline (`AgentPipeline`)
 - **Seam**: A single batch entry point called by the UI.
 - **Implementation**: Written using the Google ADK Python SDK.
-- **Orchestration**: Runs `SynonymsAgent` once on the entered word to get candidate words, then runs `ContextAgent` sequentially for each user-selected word (original + synonyms). Image generation is deferred as a future hook.
+- **Orchestration**: Runs `SynonymsAgent` once on the entered word to get candidate words, then runs `ContextAgent` sequentially for each user-selected word (original + synonyms). During context generation, `ContextAgent` binds to the `MCP Dictionary Server` to resolve verified definitions and grammatical genders.
 - **Interface**:
   - `def get_synonyms(word: str) -> SynonymsOutput` — calls `SynonymsAgent`; returns the structured synonym list so the UI can render the checklist.
   - `def generate_card_batch(words: list[str], inferred_level: str) -> Iterator[FlashcardResult]` — yields one `FlashcardResult` per word as each `ContextAgent` call completes; skips words already in the DB; captures per-word failures without aborting the batch.
@@ -80,6 +82,13 @@ graph TD
   - `card: FlashcardContext | None` — `None` on failure or if word was already in DB
   - `status: Literal["saved", "skipped", "failed"]`
   - `error: str | None`
+
+### 1b. Model Context Protocol (MCP) Dictionary Server
+- **Seam**: A stand-alone, self-sufficient module exposing dictionary lookup tools via the MCP protocol.
+- **Implementation**: Employs the `mcp` SDK to declare tools.
+- **Backend API**: Connects to the **Wiktionary API** (`de.wiktionary.org`) to parse grammatical gender (e.g. Masculine, Feminine, Neuter) and verified dictionary definitions.
+- **Agent Tool Interface**:
+  - `lookup_german_word(word: str) -> GermanWordDetails` — Returns grammatical gender, word class (part of speech), and english translation/definition. Used by `ContextAgent` to steer correct translations.
 
 ### 2. Storage Adapter (`CardStore`)
 - **Seam**: An interface managing raw data persistence and queries.

@@ -4,6 +4,9 @@ These thin wrappers isolate ADK session/runner boilerplate so that
 both the UI and tests can call agents with a single function call.
 """
 
+import json
+import re
+
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -80,8 +83,16 @@ def run_context_agent(word: str, inferred_level: CEFR_LEVELS_TYPE = "A1") -> Fla
 
     """
     prompt = f"Create a flashcard for the German word: '{word}'. The user's current CEFR level is {inferred_level}."
-    state = _run_agent(context_agent, prompt, output_key="flashcard_context", app_name="echoloop")
-    return FlashcardContext(**state["flashcard_context"])
+    state = _run_agent(context_agent, prompt, output_key="flashcard_context_raw", app_name="echoloop")
+
+    raw_response = state["flashcard_context_raw"]
+    # Extract JSON content from the raw string block
+    json_match = re.search(r"\{.*\}", raw_response, re.DOTALL)
+    if not json_match:
+        raise RuntimeError(f"Agent response did not contain a valid JSON block: {raw_response}")
+
+    card_data = json.loads(json_match.group(0))
+    return FlashcardContext(**card_data)
 
 
 def run_synonyms_agent(word: str) -> SynonymsOutput:
