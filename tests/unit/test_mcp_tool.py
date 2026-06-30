@@ -28,7 +28,17 @@ async def test_mcp_tool_execution() -> None:
         # Verify output formatting
         assert result is not None
         # FastMCP returns a tuple: (list of content blocks, metadata)
-        text_content = result[0][0].text
+        assert isinstance(result, tuple)
+        content_list = result[0]
+        assert isinstance(content_list, list)
+
+        # Verify first block is TextContent
+        from mcp.types import TextContent
+
+        text_block = content_list[0]
+        assert isinstance(text_block, TextContent)
+
+        text_content = text_block.text
         data = json.loads(text_content)
         assert data["word"] == "Hund"
         assert data["gender"] == "m"
