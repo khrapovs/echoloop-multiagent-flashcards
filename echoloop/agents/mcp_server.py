@@ -2,6 +2,7 @@
 
 import json
 
+from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
 from echoloop.storage.dictionary import OnlineDictionary
@@ -22,8 +23,9 @@ def lookup_german_word(word: str) -> str:
         word: The German word to lookup (e.g., 'Entscheidung', 'Haus').
 
     """
-    details = dictionary_client.lookup(word)
-    return json.dumps(details.to_dict(), ensure_ascii=False)
+    details = dictionary_client.lookup(word).to_dict()
+    logger.debug(f"Dictionary lookup for '{word}': {details}")
+    return json.dumps(details, ensure_ascii=False)
 
 
 if __name__ == "__main__":
