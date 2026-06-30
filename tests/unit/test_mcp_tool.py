@@ -26,19 +26,19 @@ async def test_mcp_tool_execution() -> None:
         result = await mcp.call_tool("lookup_german_word", {"word": "Hund"})
         mock_lookup.assert_called_once_with("Hund")
 
-        # Verify output formatting
-        assert result is not None
-        # FastMCP returns a tuple: (list of content blocks, metadata)
-        assert isinstance(result, tuple)
-        content_list = result[0]
-        assert isinstance(content_list, list)
+    # Verify output formatting
+    assert result is not None
+    # FastMCP returns a tuple: (list of content blocks, metadata)
+    assert isinstance(result, tuple)
+    content_list = result[0]
+    assert isinstance(content_list, list)
 
-        text_block = content_list[0]
-        assert isinstance(text_block, TextContent)
+    text_block = content_list[0]
+    assert isinstance(text_block, TextContent)
 
-        text_content = text_block.text
-        data = json.loads(text_content)
-        assert data["word"] == "Hund"
-        assert data["gender"] == "m"
-        assert data["article"] == "der"
-        assert data["definitions"] == ["dog"]
+    text_content = text_block.text
+    data = json.loads(text_content)
+    assert data["word"] == "Hund"
+    assert data["gender"] == "m"
+    assert data["article"] == "der"
+    assert data["definitions"] == ["dog"]
