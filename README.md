@@ -129,11 +129,10 @@ Before submitting code, ensure that all linting checks pass. The project uses `p
 prek install
 ```
 
-Run linting manually
+Run linting and formatting manually
 
 ```bash
 uv run prek run -v --show-diff-on-failure
-uv run ty check
 ```
 
 ### Running Tests
