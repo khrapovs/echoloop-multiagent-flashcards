@@ -7,6 +7,7 @@ both the UI and tests can call agents with a single function call.
 import json
 import re
 
+from google.adk.agents import BaseAgent
 from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
@@ -22,7 +23,7 @@ from echoloop.types import CEFR_LEVELS_TYPE
 configure_genai()
 
 
-def _run_agent(agent, message_text: str, output_key: str, app_name: str) -> dict:
+def _run_agent(agent: BaseAgent, message_text: str, output_key: str, app_name: str) -> dict:
     """Run *agent* with *message_text* and return the session state dict.
 
     Shared boilerplate: creates a fresh in-memory session, runs the agent to

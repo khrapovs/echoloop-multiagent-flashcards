@@ -4,8 +4,8 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Iterator
-from typing import Any
+from collections.abc import Callable, Iterator
+from typing import IO
 
 import pytest
 import requests
@@ -23,7 +23,7 @@ FEEDBACK_URL = BASE_URL + "/feedback"
 HEADERS = {"Content-Type": "application/json"}
 
 
-def log_output(pipe: Any, log_func: Any) -> None:
+def log_output(pipe: IO[str], log_func: Callable[[str], object]) -> None:
     """Log the output from the given pipe."""
     for line in iter(pipe.readline, ""):
         log_func(line.strip())
@@ -69,7 +69,7 @@ def wait_for_server(timeout: int = 90, interval: int = 1) -> bool:
 
 
 @pytest.fixture(scope="session")
-def server_fixture(request: Any) -> Iterator[subprocess.Popen[str]]:
+def server_fixture(request: pytest.FixtureRequest) -> Iterator[subprocess.Popen[str]]:
     """Pytest fixture to start and stop the server for testing."""
     logger.info("Starting server process")
     server_process = start_server()

@@ -57,7 +57,7 @@ src = ["echoloop", "tests"]
 preview = true
 
 [tool.ruff.lint]
-select = ["E", "F", "D", "B", "I", "ARG"]
+select = ["E", "F", "D", "B", "I", "ARG", "ANN"]
 ignore = [
   "D100",
   "D101",
