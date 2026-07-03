@@ -7,20 +7,20 @@
 
 ## 1 Motivation
 
-I live and work in Germany many years already.
-Over that time I have studied German on many different levels and tried many different methods and apps.
+I have been living and working in Germany for many years now.
+Over that time, I have studied German at many different levels and tried many different methods and apps.
 Unfortunately, none of the existing apps (e.g. Duolingo, Memrise, Anki) satisfied my needs.
-I study language with a private tutor.
-After each lesson I leave with a list of words and phrases to memorize.
-Creating flashcards from this list is time consuming.
-Besides, I believe two features are missing in the existing apps.
+I study the language with a private tutor.
+After each lesson, I leave with a list of words and phrases to memorize.
+Creating flashcards from this list is time-consuming.
+Beyond that, I find two key features missing in the existing apps.
 First, memorizing words and their direct translations is far less efficient than memorizing them in the context of a natural sentence.
 Second, expanding into synonyms is extremely useful for building a rich vocabulary.
 So, I decided to build a flashcard app that solves these problems.
 
-In addition, I work as a data scientist and ML engineer but until recently avoided using LLMs and especially agentic coding in my day-to-day work.
-This kaggle competition seemed to be a great opportunity to change that and I must admit, I was not disappointed.
-I have learned a lot and got a huge boost in my productivity and confidence in using agentic tools.
+In addition, I work as a data scientist and ML engineer but until recently had avoided using LLMs and especially agentic coding in my day-to-day work.
+This Kaggle competition seemed like a great opportunity to change that, and I must admit, I was not disappointed.
+I have learned a lot and gained a significant boost in my productivity and confidence in using agentic tools.
 
 ## 2 Problem Statement
 
