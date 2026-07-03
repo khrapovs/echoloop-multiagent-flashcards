@@ -122,7 +122,7 @@ def test_lookup_full_word() -> None:
         ]
     }
 
-    def side_effect(url, *args, **kwargs):
+    def side_effect(url: str, *args: str, **kwargs: str) -> MagicMock:
         _ = args
         _ = kwargs
         if "w/api.php" in url:

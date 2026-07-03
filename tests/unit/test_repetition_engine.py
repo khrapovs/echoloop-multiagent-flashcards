@@ -30,7 +30,11 @@ def engine(store: CardStore) -> RepetitionEngine:
 
 
 def _card(
-    word: str = "Hund", detected_level: CEFR_LEVELS_TYPE = "A1", repetitions=0, interval_days=1, easiness_factor=2.5
+    word: str = "Hund",
+    detected_level: CEFR_LEVELS_TYPE = "A1",
+    repetitions: int = 0,
+    interval_days: int = 1,
+    easiness_factor: float = 2.5,
 ) -> Card:
     """Build a Card with sensible SM-2 defaults, overridable via kwargs."""
     return Card(
