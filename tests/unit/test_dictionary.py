@@ -75,10 +75,7 @@ def test_fetch_definitions_and_pos() -> None:
         "de": [
             {
                 "partOfSpeech": "Noun",
-                "definitions": [
-                    {"definition": "<a href='/wiki/dog'>dog</a>"},
-                    {"definition": "scoundrel"},
-                ],
+                "definitions": [{"definition": "<a href='/wiki/dog'>dog</a>"}, {"definition": "scoundrel"}],
             }
         ]
     }
@@ -113,14 +110,7 @@ def test_lookup_full_word() -> None:
 
     mock_def_resp = MagicMock()
     mock_def_resp.status_code = 200
-    mock_def_resp.json.return_value = {
-        "de": [
-            {
-                "partOfSpeech": "Noun",
-                "definitions": [{"definition": "dog"}],
-            }
-        ]
-    }
+    mock_def_resp.json.return_value = {"de": [{"partOfSpeech": "Noun", "definitions": [{"definition": "dog"}]}]}
 
     def side_effect(url: str, *args: str, **kwargs: str) -> MagicMock:
         _ = args
