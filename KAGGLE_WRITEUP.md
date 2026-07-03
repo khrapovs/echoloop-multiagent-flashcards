@@ -29,7 +29,7 @@ Apps like Duolingo lock users into a fixed curriculum of pre-packaged phrases, m
 Anki offers full flexibility but demands tedious manual card creation — typing definitions, finding example sentences, and looking up grammatical genders by hand.
 Neither approach generates contextual sentences calibrated to the learner's proficiency, and neither expands a single word into a cluster of related synonyms automatically.
 
-The core problem: **there is no flashcard tool that takes a single German word from a real-life encounter and instantly produces verified, level-appropriate, contextual study material — complete with synonyms, grammatical metadata, and spaced repetition scheduling.**
+**The core problem:** there is no flashcard tool that takes a single word from a real-life encounter and instantly produces verified, level-appropriate, contextual study material — complete with synonyms, grammatical metadata, and spaced repetition scheduling.
 
 ## 3 Solution Overview
 
@@ -56,7 +56,7 @@ A multi-agent architecture solves this by assigning each responsibility to a foc
 
 - The **Synonyms Agent** operates as a pure lexicographer — it only proposes related words, validated against a strict Pydantic schema.
 - The **Context Agent** is an expert teacher — it first calls the MCP dictionary tool to retrieve verified definitions and grammatical genders, then composes sentences grounded in that factual data.
-- The **AgentPipeline** orchestrator handles sequencing, deduplication, error isolation, and streaming results to the UI.
+- The **Agent Pipeline** orchestrator handles sequencing, deduplication, error isolation, and streaming results to the UI.
 
 This separation of concerns makes each agent independently testable, individually tuneable, and resilient to partial failures — if one word fails, the batch continues.
 
@@ -119,7 +119,7 @@ It exposes a single tool:
 
 - **`lookup_german_word(word)`**: Queries the `OnlineDictionary` client (`dictionary.py`), which makes two HTTP calls:
   1. **English Wiktionary REST API** (`en.wiktionary.org`): Retrieves part of speech and English definitions for the German entry.
-  2. **German Wiktionary MediaWiki API** (`de.wiktionary.org`): Parses the raw wikitext of the German entry to extract grammatical gender using regex patterns matching `|Genus=m`, `{{f}}`, etc.
+  2. **German Wiktionary MediaWiki API** (`de.wiktionary.org`): Parses the raw wikitext of the German entry to extract grammatical gender using regex patterns matching.
 
 The Context Agent binds this toolset via ADK's `McpToolset` with `StdioConnectionParams`.
 This architecture cleanly separates the dictionary lookup concern from the LLM prompt, ensuring the agent always has access to factual, verified data before composing its response.
@@ -129,7 +129,7 @@ This architecture cleanly separates the dictionary lookup concern from the LLM p
 The `RepetitionEngine` is a pure computation layer with no database write side effects.
 It implements two responsibilities:
 
-- **SM-2 scheduling** (`calculate_next_review`): Given a card and a recall rating (0–5), it computes the new easiness factor (`EF' = EF + 0.1 - (5-q)(0.08 + (5-q)·0.02)`), clamped to a minimum of 1.3, and derives the next interval and review date.
+- **SM-2 scheduling** (`calculate_next_review`): Given a card and a recall rating (0–5), it computes the new easiness factor, and derives the next interval and review date.
   Failed recalls (score < 3) reset the repetition counter.
 - **CEFR level inference** (`get_inferred_user_level`): Analyzes the `detected_level` distribution across all stored cards and returns the mode (most frequent level).
   Ties are broken toward the easier level.
@@ -252,5 +252,5 @@ This project is both a practical tool I use daily and a demonstration of what be
 ## Links
 
 - **GitHub Repository**: https://github.com/khrapovs/echoloop-multiagent-flashcards
-- **Live Demo**: https://echoloop-ui-6ugfw5xmka-ez.a.run.app/
+- **Live Demo**: <!-- TODO: Add App URL -->
 - **YouTube Video**: <!-- TODO: Add YouTube URL after recording (≤ 5 min) -->
