@@ -10,7 +10,7 @@ We are designing this application using **Google's Agent Development Kit (ADK)**
 
 - **Orchestration**: ADK (Agent Development Kit) agents coordinating sequentially.
 - **Model**: Google Gemini Developer API models (e.g., `gemini-1.5-flash` or newer).
-- **Deployment Target**: Google Cloud Platform (using `agent_runtime` or `cloud_run` via `agents-cli`).
+- **Deployment Target**: Google Cloud Platform (Cloud Run via Terraform + `deploy.sh`).
 - **Database**: Normalized SQLite database for cards, examples, synonyms, and reviews.
 - **Frontend**: Streamlit (Python-only UI) for the MVP prototype.
 - **Language Scope**: German (target language) to English (native/base language).
