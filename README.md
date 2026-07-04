@@ -66,28 +66,41 @@ graph TD
 
 ```
 .
-├── .agents/                  # Customization rules and agent skills
-├── echoloop/                 # Main application package
-│   ├── agents/               # ADK Agent definitions & MCP Server
-│   │   ├── context_agent.py  # Context generation agent (calls MCP tool)
-│   │   ├── synonyms_agent.py # Synonym generation agent
-│   │   └── mcp_server.py     # Local Stdio FastMCP Dictionary Server
-│   ├── app_utils/            # Telemetry and type specifications
-│   ├── ui/                   # Streamlit Multi-page UI package
-│   │   ├── pages/            # Pages (Add Card, Review)
-│   │   ├── main.py           # Streamlit root entry point
-│   │   └── styles.css        # Custom UI CSS styles
-│   ├── cli.py                # CLI runner entry point
-│   ├── pipeline.py           # Multi-agent orchestrator (AgentPipeline)
-│   ├── repetition_engine.py  # SM-2 Scheduler & CEFR level estimator
-│   └── storage/              # SQLite connection, models, & APIs
-│       ├── adapter.py        # Database CardStore CRUD operations
-│       └── dictionary.py     # Wiktionary HTTP API client
-├── terraform/                # Infrastructure as Code (GCP)
-├── tests/                    # Test suite (unit & integration)
-├── Dockerfile                # Production container definition
-├── deploy.sh                 # Automated build & deployment script
-└── pyproject.toml            # Project metadata & dependencies
+├── .agents/                   # Antigravity agent skills (tdd, grilling, codebase-design, …)
+├── .github/workflows/         # CI: lint, test, version bump
+├── echoloop/                  # Main application package
+│   ├── agents/                # ADK Agent definitions & MCP Server
+│   │   ├── context_agent.py   # Context generation agent (calls MCP tool)
+│   │   ├── synonyms_agent.py  # Synonym generation agent
+│   │   └── mcp_server.py      # Local Stdio FastMCP Dictionary Server
+│   ├── app_utils/             # Telemetry and type specifications
+│   ├── storage/               # SQLite connection, models, & APIs
+│   │   ├── adapter.py         # Database CardStore CRUD operations
+│   │   ├── dictionary.py      # Wiktionary HTTP API client
+│   │   └── models.py          # Pydantic / dataclass DB models
+│   ├── ui/                    # Streamlit Multi-page UI package
+│   │   ├── pages/             # Pages (Add Card, Review)
+│   │   ├── auth.py            # Google SSO OAuth2 + email whitelist
+│   │   ├── main.py            # Streamlit root entry point
+│   │   ├── styles.css         # Custom UI CSS styles
+│   │   └── styles.py          # CSS injection helper
+│   ├── cli.py                 # CLI runner entry point
+│   ├── config.py              # Application configuration
+│   ├── constants.py           # Shared constants (CEFR levels, SM-2 params)
+│   ├── pipeline.py            # Multi-agent orchestrator (AgentPipeline)
+│   ├── repetition_engine.py   # SM-2 Scheduler & CEFR level estimator
+│   ├── runner.py              # ADK runner helpers (invoke agents, parse output)
+│   └── types.py               # Shared type aliases
+├── terraform/                 # Infrastructure as Code (GCP)
+├── tests/                     # Test suite
+│   ├── eval/                  # ADK evaluation datasets & config
+│   ├── integration/           # Live-API integration tests
+│   └── unit/                  # Offline unit tests (96 tests)
+├── .env-example               # Template for deployment env vars
+├── Dockerfile                 # Production container definition
+├── deploy.sh                  # Automated build & deployment script
+├── PROJECT_PLAN.md            # Architecture & implementation plan
+└── pyproject.toml             # Project metadata & dependencies
 ```
 
 ---
