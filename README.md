@@ -73,7 +73,6 @@ graph TD
 │   │   ├── context_agent.py   # Context generation agent (calls MCP tool)
 │   │   ├── synonyms_agent.py  # Synonym generation agent
 │   │   └── mcp_server.py      # Local Stdio FastMCP Dictionary Server
-│   ├── app_utils/             # Telemetry and type specifications
 │   ├── storage/               # SQLite connection, models, & APIs
 │   │   ├── adapter.py         # Database CardStore CRUD operations
 │   │   ├── dictionary.py      # Wiktionary HTTP API client
