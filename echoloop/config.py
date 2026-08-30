@@ -18,19 +18,23 @@ def configure_genai() -> None:
 
     Safe to call multiple times — subsequent calls are no-ops.
     """
-    # Remove conflicting GOOGLE_GENAI_USE_ENTERPRISE env var if present
-    os.environ.pop("GOOGLE_GENAI_USE_ENTERPRISE", None)
+    # Pop deprecated GOOGLE_GENAI_USE_VERTEXAI to avoid deprecation warnings from google-adk
+    legacy_val = os.environ.pop("GOOGLE_GENAI_USE_VERTEXAI", None)
 
-    # Already configured by the caller or a previous call — leave it alone.
-    if "GOOGLE_GENAI_USE_VERTEXAI" in os.environ:
+    # Already configured by the caller or a previous call
+    if "GOOGLE_GENAI_USE_ENTERPRISE" in os.environ:
+        return
+
+    if legacy_val is not None:
+        os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = legacy_val
         return
 
     if os.environ.get("GOOGLE_API_KEY"):
         # Developer API key present — use the Gemini Developer API directly.
-        os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "False"
+        os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "False"
         return
 
-    # No API key — fall back to Vertex AI with Application Default Credentials.
+    # No API key — fall back to Vertex AI / Enterprise with Application Default Credentials.
     try:
         import google.auth  # noqa: PLC0415
 
@@ -41,4 +45,4 @@ def configure_genai() -> None:
     if project_id:
         os.environ["GOOGLE_CLOUD_PROJECT"] = project_id
     os.environ.setdefault("GOOGLE_CLOUD_LOCATION", "global")
-    os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+    os.environ["GOOGLE_GENAI_USE_ENTERPRISE"] = "True"

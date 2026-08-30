@@ -4,11 +4,12 @@ from echoloop.config import configure_genai
 from pytest import MonkeyPatch
 
 
-def test_configure_genai_removes_enterprise_env_var(monkeypatch: MonkeyPatch) -> None:
-    """Ensure GOOGLE_GENAI_USE_ENTERPRISE is popped to avoid warnings in google.genai SDK."""
-    monkeypatch.setenv("GOOGLE_GENAI_USE_ENTERPRISE", "FALSE")
-    monkeypatch.delenv("GOOGLE_GENAI_USE_VERTEXAI", raising=False)
+def test_configure_genai_uses_enterprise_env_var(monkeypatch: MonkeyPatch) -> None:
+    """Ensure GOOGLE_GENAI_USE_ENTERPRISE is set and GOOGLE_GENAI_USE_VERTEXAI is popped to avoid warnings."""
+    monkeypatch.setenv("GOOGLE_GENAI_USE_VERTEXAI", "True")
+    monkeypatch.delenv("GOOGLE_GENAI_USE_ENTERPRISE", raising=False)
 
     configure_genai()
 
-    assert "GOOGLE_GENAI_USE_ENTERPRISE" not in os.environ
+    assert os.environ.get("GOOGLE_GENAI_USE_ENTERPRISE") == "True"
+    assert "GOOGLE_GENAI_USE_VERTEXAI" not in os.environ
