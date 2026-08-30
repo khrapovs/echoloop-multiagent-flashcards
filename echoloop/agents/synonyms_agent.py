@@ -30,7 +30,7 @@ class SynonymsOutput(BaseModel):
 
 synonyms_agent = Agent(
     name="synonyms_agent",
-    model=Gemini(model="gemini-3.5-flash-lite", retry_options=types.HttpRetryOptions(attempts=3)),
+    model=Gemini(model="gemini-3.7-flash", retry_options=types.HttpRetryOptions(attempts=3)),
     instruction=(
         "You are an expert German lexicographer. "
         "Given a single German word, return up to 5 synonyms or closely related words in German. "
