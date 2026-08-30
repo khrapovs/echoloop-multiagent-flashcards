@@ -18,6 +18,9 @@ def configure_genai() -> None:
 
     Safe to call multiple times — subsequent calls are no-ops.
     """
+    # Remove conflicting GOOGLE_GENAI_USE_ENTERPRISE env var if present
+    os.environ.pop("GOOGLE_GENAI_USE_ENTERPRISE", None)
+
     # Already configured by the caller or a previous call — leave it alone.
     if "GOOGLE_GENAI_USE_VERTEXAI" in os.environ:
         return
