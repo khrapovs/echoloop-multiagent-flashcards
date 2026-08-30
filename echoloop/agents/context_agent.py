@@ -35,7 +35,7 @@ dictionary_toolset = McpToolset(
 
 context_agent = Agent(
     name="context_agent",
-    model=Gemini(model="gemini-flash-latest", retry_options=types.HttpRetryOptions(attempts=3)),
+    model=Gemini(model="gemini-3.5-flash-lite", retry_options=types.HttpRetryOptions(attempts=3)),
     instruction=(
         "You are an expert German language teacher. Given a German word and the user's current inferred CEFR level "
         "(e.g., A1, B2, etc.), you MUST first call the lookup_german_word tool to fetch the verified dictionary "
