@@ -22,20 +22,16 @@ dependencies = [
 [project.scripts]
 echoloop = "echoloop.cli:run_ui"
 
-[project.optional-dependencies]
-eval = [
-  "google-adk[eval]>=2.3.0",
-]
-
 [dependency-groups]
 dev = [
+  "google-adk[eval]>=2.3.0",
   "prek>=0.4.5",
   "pytest>=9.1.1",
   "ty>=0.0.51",
 ]
 
 [build-system]
-requires = ["uv_build>=0.11.20,<0.12"]
+requires = ["uv_build>=0.11.20,<0.14"]
 build-backend = "uv_build"
 
 [tool.commitizen]
@@ -58,19 +54,7 @@ preview = true
 
 [tool.ruff.lint]
 select = ["E", "F", "D", "B", "I", "ARG", "ANN"]
-ignore = [
-  "D100",
-  "D101",
-  "D102",
-  "D103",
-  "D104",
-  "D105",
-  "D106",
-  "D107",
-  "D203",
-  "D213",
-  "D417"
-]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D105", "D106", "D107", "D203", "D213", "D417"]
 
 [tool.ty.rules]
 no-matching-overload = "ignore"
