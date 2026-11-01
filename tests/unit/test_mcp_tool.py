@@ -1,16 +1,16 @@
-"""Unit tests for the FastMCP dictionary server."""
+"""Unit tests for the MCPServer dictionary server."""
 
 import json
 from unittest.mock import MagicMock, patch
 
 import pytest
 from echoloop.agents.mcp_server import mcp
-from mcp.types import TextContent
+from mcp.types import CallToolResult, TextContent
 
 
 @pytest.mark.anyio()
 async def test_mcp_tool_execution() -> None:
-    """Verify that the lookup_german_word tool executes correctly via FastMCP's test client."""
+    """Verify that the lookup_german_word tool executes correctly via MCPServer's test client."""
     mock_details = MagicMock()
     mock_details.to_dict.return_value = {
         "word": "Hund",
@@ -28,9 +28,9 @@ async def test_mcp_tool_execution() -> None:
 
     # Verify output formatting
     assert result is not None
-    # FastMCP returns a tuple: (list of content blocks, metadata)
-    assert isinstance(result, tuple)
-    content_list = result[0]
+    assert isinstance(result, CallToolResult)
+    assert not result.is_error
+    content_list = result.content
     assert isinstance(content_list, list)
 
     text_block = content_list[0]

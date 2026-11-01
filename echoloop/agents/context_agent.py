@@ -23,7 +23,7 @@ class FlashcardContext(BaseModel):
     example_sentence_english: str = Field(description="The English translation of the German example sentence.")
 
 
-# Define the MCP toolset connection params pointing to our local FastMCP server module
+# Define the MCP toolset connection params pointing to our local MCPServer server module
 dictionary_toolset = McpToolset(
     connection_params=StdioConnectionParams(
         server_params=StdioServerParameters(

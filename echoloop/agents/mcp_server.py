@@ -3,12 +3,12 @@
 import json
 
 from loguru import logger
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
 
 from echoloop.storage.dictionary import OnlineDictionary
 
-# Initialize the FastMCP server instance
-mcp = FastMCP("EchoLoop Dictionary Server")
+# Initialize the MCPServer server instance
+mcp = MCPServer("EchoLoop Dictionary Server")
 dictionary_client = OnlineDictionary()
 
 
@@ -29,5 +29,5 @@ def lookup_german_word(word: str) -> str:
 
 
 if __name__ == "__main__":
-    # fastmcp run() automatically listens on stdio for MCP clients
+    # MCPServer run() automatically listens on stdio for MCP clients
     mcp.run()
