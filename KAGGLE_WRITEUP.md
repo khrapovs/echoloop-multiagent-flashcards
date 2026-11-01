@@ -65,7 +65,7 @@ This separation of concerns makes each agent independently testable, individuall
 - **Instant card generation**: Enter any German word → receive a flashcard with translation, CEFR level, and a contextual example sentence within seconds.
 - **Synonym expansion**: The Synonyms Agent proposes up to 5 related words.
   Users select which ones they want via an interactive checklist before batch-generating cards.
-- **MCP-verified definitions**: A local FastMCP server queries the Wiktionary API to retrieve exact grammatical genders (`der`/`die`/`das`) and English definitions, eliminating hallucinated translations.
+- **MCP-verified definitions**: A local MCPServer server queries the Wiktionary API to retrieve exact grammatical genders (`der`/`die`/`das`) and English definitions, eliminating hallucinated translations.
 - **Adaptive difficulty**: The Repetition Engine dynamically infers the user's CEFR level from the distribution of existing cards and instructs the Context Agent to compose sentences at the appropriate complexity.
 - **SM-2 spaced repetition**: Cards are scheduled using the SuperMemo-2 algorithm — recall ratings (0–5) update the easiness factor, interval, and next review date.
 - **Session-based review**: A dedicated review page presents due cards, lets users flip to reveal answers, rate recall, and tracks progress.
@@ -114,7 +114,7 @@ Results are yielded as an iterator, enabling the Streamlit UI to stream cards to
 
 ### 4.2 MCP Dictionary Server
 
-The MCP server (`mcp_server.py`) is a self-contained FastMCP application that runs as a local Stdio subprocess.
+The MCP server (`mcp_server.py`) is a self-contained MCPServer application that runs as a local Stdio subprocess.
 It exposes a single tool:
 
 - **`lookup_german_word(word)`**: Queries the `OnlineDictionary` client (`dictionary.py`), which makes two HTTP calls:
@@ -197,7 +197,7 @@ I implemented the SM-2 algorithm from scratch as a pure computation layer, added
 
 **Phase 3 — MCP integration.**
 Early testing revealed that the Context Agent occasionally hallucinated grammatical genders — producing "die Hund" instead of "der Hund".
-To solve this, I built a stand-alone FastMCP server backed by the Wiktionary API.
+To solve this, I built a stand-alone MCPServer server backed by the Wiktionary API.
 The server queries both the English Wiktionary (for definitions) and the German Wiktionary (for grammatical genders parsed from wikitext).
 Binding this tool to the Context Agent via ADK's `McpToolset` eliminated gender hallucinations entirely.
 

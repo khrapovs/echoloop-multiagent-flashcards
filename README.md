@@ -11,7 +11,7 @@ This project is a submission to the Kaggle [AI Agents: Intensive Vibe Coding Cap
 * **Multi-Agent Generation Pipeline**:
   * **Synonyms Agent**: Suggests up to 5 lexicographically matching German synonyms.
   * **Context Agent**: Analyzes selected words, infers target translation, estimates CEFR difficulty levels, and writes contextual German-English example sentences appropriate for the user's estimated level.
-* **Model Context Protocol (MCP) Integration**: Binds a local FastMCP server to fetch verified definitions and grammatical genders from the Wiktionary API, eliminating translation hallucinations.
+* **Model Context Protocol (MCP) Integration**: Binds a local MCPServer server to fetch verified definitions and grammatical genders from the Wiktionary API, eliminating translation hallucinations.
 * **Synonym Verification Checklist**: Allows you to check/uncheck generated synonyms before batch-generating flashcards.
 * **Spaced Repetition Scheduler**: Employs the **SuperMemo-2 (SM-2)** scheduling algorithm (calculating Easiness Factor, repetitions, and intervals) to queue cards due for review.
 * **Interactive Session-based Review**: Flip cards to see answers, rate your recall from 0 to 5, and dynamically save metrics.
@@ -72,7 +72,7 @@ graph TD
 │   ├── agents/                # ADK Agent definitions & MCP Server
 │   │   ├── context_agent.py   # Context generation agent (calls MCP tool)
 │   │   ├── synonyms_agent.py  # Synonym generation agent
-│   │   └── mcp_server.py      # Local Stdio FastMCP Dictionary Server
+│   │   └── mcp_server.py      # Local Stdio MCPServer Dictionary Server
 │   ├── storage/               # SQLite connection, models, & APIs
 │   │   ├── adapter.py         # Database CardStore CRUD operations
 │   │   ├── dictionary.py      # Wiktionary HTTP API client
